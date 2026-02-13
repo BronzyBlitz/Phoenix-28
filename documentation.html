@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phoenix 28 Tech · Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --glass-bg: rgba(20, 20, 30, 0.6);
+      --glass-border: rgba(34, 197, 94, 0.25);
+      --neon-green: #22c55e;
+      --neon-glow: 0 0 10px #22c55e, 0 0 20px rgba(34, 197, 94, 0.3);
+      --dark-bg: #0a0a0f;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--dark-bg);
+      color: #e0e0e0;
+    }
+    .ios-26-glass-dark {
+      background: rgba(8, 10, 15, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34,197,94,0.2);
+      box-shadow: var(--neon-glow);
+      border-radius: 1.5rem;
+    }
+    .doc-sidebar {
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    .doc-link {
+      display: block;
+      padding: 0.5rem 1rem;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .doc-link:hover, .doc-link.active {
+      border-left-color: #22c55e;
+      background: rgba(34, 197, 94, 0.1);
+    }
+    pre {
+      background: #0a0c12;
+      border: 1px solid #22c55e33;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'Roboto Mono', monospace;
+    }
+    code {
+      color: #22c55e;
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+    body.page-exit {
+      animation: pageOut 0.4s ease-in-out forwards;
+    }
+    body.page-enter {
+      animation: pageIn 0.4s ease-in-out forwards;
+    }
+    /* Bottom Navigation - Mobile Only */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 40px;
+      z-index: 50;
+      padding: 10px 6px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.3);
+      justify-content: space-around;
+    }
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      main { padding-bottom: 120px; }
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #22c55e;
+      text-decoration: none;
+      transition: 0.2s;
+      flex: 1 0 0;
+      padding: 6px 0;
+    }
+    .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+    .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
+    .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="fixed top-5 left-5 right-5 z-30 ios-26-glass-dark" style="border-radius: 18px;">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-2" onclick="navigatePage(event)">
+        <span class="text-2xl font-bold tracking-tighter">
+          <span class="text-[#22c55e]">◈</span>
+          <span class="ml-2">Phoenix 28</span>
+        </span>
+      </a>
+      <nav class="flex gap-6 font-mono">
+        <a href="index.html" class="hover:text-[#22c55e] transition-colors" onclick="navigatePage(event)">← Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10 container mx-auto px-4 pt-32 pb-20">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Sidebar -->
+      <div class="lg:w-1/4">
+        <div class="doc-sidebar ios-26-glass-dark p-4 rounded-3xl">
+          <div class="mb-4 pb-2 border-b border-[#22c55e33]">
+            <input type="search" placeholder="Search docs..." class="w-full bg-black/40 border border-[#22c55e] p-2 rounded-xl text-sm">
+          </div>
+          <nav class="space-y-1">
+            <div class="font-bold text-[#22c55e] mb-2">Getting Started</div>
+            <a href="#" class="doc-link active">Introduction</a>
+            <a href="#" class="doc-link">Quick Start</a>
+            <a href="#" class="doc-link">Installation</a>
+            <a href="#" class="doc-link">Authentication</a>
+            
+            <div class="font-bold text-[#22c55e] mt-4 mb-2">Core Products</div>
+            <a href="#" class="doc-link">Aegis AI API</a>
+            <a href="#" class="doc-link">Nimbus Secure Mesh</a>
+            <a href="#" class="doc-link">ChainVault SDK</a>
+            
+            <div class="font-bold text-[#22c55e] mt-4 mb-2">Guides</div>
+            <a href="#" class="doc-link">Security Best Practices</a>
+            <a href="#" class="doc-link">Deployment Patterns</a>
+            <a href="#" class="doc-link">Monitoring & Logging</a>
+            <a href="#" class="doc-link">Troubleshooting</a>
+            
+            <div class="font-bold text-[#22c55e] mt-4 mb-2">API Reference</div>
+            <a href="#" class="doc-link">REST API</a>
+            <a href="#" class="doc-link">WebSocket API</a>
+            <a href="#" class="doc-link">GraphQL</a>
+            <a href="#" class="doc-link">SDKs</a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="lg:w-3/4">
+        <h1 class="text-4xl font-mono mb-6"><span class="text-[#22c55e]">//</span> documentation</h1>
+        
+        <div class="ios-26-glass-dark p-8 rounded-3xl mb-8">
+          <h2 class="text-2xl font-bold mb-4">Introduction to Phoenix 28 Platform</h2>
+          <p class="mb-4">Welcome to the Phoenix 28 documentation. Our platform provides enterprise-grade AI, security, and blockchain solutions with a focus on zero-trust architecture and scalability.</p>
+          
+          <h3 class="text-xl font-bold mt-6 mb-3 text-[#22c55e]">Quick Example</h3>
+          <pre><code>// Initialize Aegis AI client
+const aegis = new Phoenix.Aegis({
+  apiKey: 'your-api-key',
+  environment: 'production'
+});
+
+// Analyze transaction for fraud
+const result = await aegis.analyze({
+  amount: 1299.99,
+  merchant: 'tech-store',
+  user_id: 'usr_123456'
+});
+
+console.log(result.riskScore); // 0.02 (low risk)</code></pre>
+
+          <h3 class="text-xl font-bold mt-6 mb-3 text-[#22c55e]">Key Concepts</h3>
+          <ul class="list-disc pl-6 space-y-2">
+            <li><span class="text-[#22c55e]">Zero-Trust Mesh:</span> Every request is authenticated, authorized, and encrypted.</li>
+            <li><span class="text-[#22c55e]">AI Pipeline:</span> Real-time inference with explainable AI outputs.</li>
+            <li><span class="text-[#22c55e]">Immutable Audit:</span> All actions logged on blockchain for compliance.</li>
+          </ul>
+        </div>
+
+        <div class="ios-26-glass-dark p-8 rounded-3xl mb-8">
+          <h2 class="text-2xl font-bold mb-4">Getting Started in 5 Minutes</h2>
+          <div class="grid md:grid-cols-3 gap-4 mb-6">
+            <div class="text-center p-4 border border-[#22c55e33] rounded-xl">
+              <i class="fas fa-key text-3xl text-[#22c55e] mb-2"></i>
+              <div class="font-bold">1. Get API Key</div>
+              <div class="text-sm opacity-70">From dashboard</div>
+            </div>
+            <div class="text-center p-4 border border-[#22c55e33] rounded-xl">
+              <i class="fas fa-download text-3xl text-[#22c55e] mb-2"></i>
+              <div class="font-bold">2. Install SDK</div>
+              <div class="text-sm opacity-70">npm install phoenix-sdk</div>
+            </div>
+            <div class="text-center p-4 border border-[#22c55e33] rounded-xl">
+              <i class="fas fa-rocket text-3xl text-[#22c55e] mb-2"></i>
+              <div class="font-bold">3. Make First Call</div>
+              <div class="text-sm opacity-70">See example above</div>
+            </div>
+          </div>
+          <button class="bg-[#22c55e] text-black px-6 py-2 rounded-full">View Full Quickstart →</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="ios-26-glass-dark p-6 rounded-3xl">
+            <i class="fas fa-book text-3xl text-[#22c55e] mb-3"></i>
+            <h3 class="text-xl font-bold mb-2">SDK Reference</h3>
+            <p class="opacity-70 text-sm mb-4">JavaScript, Python, Go, and Rust SDKs with examples.</p>
+            <a href="#" class="text-[#22c55e]">Browse SDKs →</a>
+          </div>
+          <div class="ios-26-glass-dark p-6 rounded-3xl">
+            <i class="fas fa-cloud text-3xl text-[#22c55e] mb-3"></i>
+            <h3 class="text-xl font-bold mb-2">Deployment Guides</h3>
+            <p class="opacity-70 text-sm mb-4">AWS, Azure, GCP, and on-premises deployment patterns.</p>
+            <a href="#" class="text-[#22c55e]">View Guides →</a>
+          </div>
+          <div class="ios-26-glass-dark p-6 rounded-3xl">
+            <i class="fas fa-shield text-3xl text-[#22c55e] mb-3"></i>
+            <h3 class="text-xl font-bold mb-2">Security Configuration</h3>
+            <p class="opacity-70 text-sm mb-4">Hardening guides, IAM setup, and audit logging.</p>
+            <a href="#" class="text-[#22c55e]">Security Docs →</a>
+          </div>
+          <div class="ios-26-glass-dark p-6 rounded-3xl">
+            <i class="fas fa-code-branch text-3xl text-[#22c55e] mb-3"></i>
+            <h3 class="text-xl font-bold mb-2">API Changelog</h3>
+            <p class="opacity-70 text-sm mb-4">Latest updates, deprecations, and version history.</p>
+            <a href="#" class="text-[#22c55e]">View Changes →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="ios-26-glass-dark mt-10 py-8 relative z-20">
+    <div class="container mx-auto text-center">
+      <p>© 2026 Phoenix 28 Tech. <a href="index.html" class="text-[#22c55e] hover:underline" onclick="navigatePage(event)">Back to Home</a></p>
+    </div>
+  </footer>
+  <script>
+    function navigatePage(event) {
+      event.preventDefault();
+      const href = event.currentTarget.href;
+      document.body.classList.add('page-exit');
+      setTimeout(() => {
+        window.location.href = href;
+      }, 400);
+    }
+    document.body.classList.add('page-enter');
+  </script>
+
+  <!-- Bottom Navigation - Mobile -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" onclick="navigatePage(event)"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="blog.html" onclick="navigatePage(event)"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+    <a href="documentation.html" class="active" onclick="navigatePage(event)"><i class="fas fa-book"></i><span>Docs</span></a>
+    <a href="whitepapers.html" onclick="navigatePage(event)"><i class="fas fa-file-pdf"></i><span>Papers</span></a>
+    <a href="press.html" onclick="navigatePage(event)"><i class="fas fa-microphone"></i><span>Press</span></a>
+    <a href="support.html" onclick="navigatePage(event)"><i class="fas fa-headset"></i><span>Support</span></a>
+  </nav>
+</body>
+</html>

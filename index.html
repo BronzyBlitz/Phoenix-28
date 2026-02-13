@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Phoenix 28 Tech · AI · cloud · security</title>
+  <!-- Tailwind + Fonts + Icons (Font Awesome 6) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    /* ----- iOS 26 glass‑liquid / cyberpunk extensions + upgrades ----- */
+    :root {
+      --glass-bg: rgba(20, 20, 30, 0.6);
+      --glass-border: rgba(34, 197, 94, 0.25);
+      --neon-green: #22c55e;
+      --neon-glow: 0 0 10px #22c55e, 0 0 20px rgba(34, 197, 94, 0.3);
+      --dark-bg: #0a0a0f;
+      /* common sizes & shadows to avoid duplication */
+      --glass-radius: 2rem;
+      --card-radius: 1.5rem;
+      --humanoid-shadow: 0 0 60px #22c55eaa, 0 0 120px #22c55e55, 0 25px 50px rgba(0,0,0,0.8);
+      --humanoid-shadow-hover: 0 0 80px #22c55ecc, 0 0 140px #22c55e77, 0 25px 50px rgba(0,0,0,0.8);
+      --inset-glow: inset 0 0 40px rgba(34,197,94,0.15);
+      --inset-glow-hover: inset 0 0 40px rgba(34,197,94,0.25);
+      --panel-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      --nav-radius: 40px;
+    }
+    .light {
+      --glass-bg: rgba(240, 240, 255, 0.6);
+      --glass-border: rgba(34, 197, 94, 0.5);
+      --dark-bg: #f0f4fa;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--dark-bg);
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+      position: relative;
+      color: #e0e0e0;
+    }
+    body.light { color: #111; }
+    body.light .text-white { color: #111; }
+    body.reduce-motion * { animation: none !important; transition: none !important; }
+
+    .ios-26-glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px) saturate(180%);
+      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--glass-radius);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(34,197,94,0.1) inset;
+    }
+    .ios-26-glass-dark {
+      background: rgba(8, 10, 15, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34,197,94,0.2);
+      box-shadow: var(--neon-glow);
+      border-radius: var(--card-radius);
+    }
+    /* animations / effects */
+    @keyframes liquidFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .liquid-bg {
+      background: linear-gradient(45deg, #0b0f15, #1a1e26, #0f131a);
+      background-size: 300% 300%;
+      animation: liquidFlow 8s infinite;
+    }
+    @keyframes pulse-glow {
+      0%,100% { box-shadow: 0 0 5px #22c55e, 0 0 20px #22c55e55; }
+      50% { box-shadow: 0 0 20px #22c55e, 0 0 40px #22c55eaa; }
+    }
+    .pulse-glow { animation: pulse-glow 3s infinite; }
+    @keyframes glitch {
+      2%,64% { transform: skew(2deg, 1deg); text-shadow: -2px 0 #22c55e, 2px 0 #0ff; }
+      4%,60% { transform: skew(0); text-shadow: none; }
+    }
+    .glitch { animation: glitch 3s infinite; }
+    /* matrix rain canvas */
+    #matrix-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; opacity: 0.2;
+    }
+    .scanlines {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,255,0,0.02) 2px, transparent 3px);
+      pointer-events: none; z-index: 1;
+    }
+    /* terminal style */
+    .terminal-cursor {
+      display: inline-block; width: 10px; height: 1.2em; background: #22c55e;
+      vertical-align: middle; margin-left: 4px; animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+    body.page-exit {
+      animation: pageOut 0.4s ease-in-out forwards;
+    }
+    body.page-enter {
+      animation: pageIn 0.4s ease-in-out forwards;
+    }
+    /* cards hover */
+    .service-card, .team-card {
+      transition: all 0.2s ease;
+    }
+    .service-card:hover, .team-card:hover {
+      transform: scale(1.02) translateY(-5px);
+      box-shadow: var(--neon-glow);
+    }
+    /* bottom nav upgraded: iOS 28 liquid glass + curve — now with 7 items */
+    .bottom-nav {
+      display: none; 
+      position: fixed; 
+      bottom: 16px; 
+      left: 16px; 
+      right: 16px; 
+      background: rgba(10,10,15,0.75); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid #22c55e; 
+      border-radius: 40px; 
+      z-index: 50; 
+      padding: 10px 6px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px #22c55e33;
+      justify-content: space-around;
+    }
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      .desktop-nav { display: none !important; }
+    }
+    .bottom-nav a {
+      display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #22c55e; transition: 0.2s;
+      flex: 1 0 0;
+    }
+    .bottom-nav a i { font-size: 20px; }
+    .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+
+    /* Header now has curved bottom on mobile like bottom nav */
+    header {
+      transition: border-radius 0.3s;
+    }
+    @media (max-width: 768px) {
+      header {
+        border-radius: 40px !important;
+        margin: 10px 16px 0 16px;
+        width: calc(100% - 32px);
+        left: 0;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    /* Desktop-only header spacing + liquid-glass desktop nav buttons */
+    @media (min-width: 769px) {
+      /* lift the header from the top and give rounded edges on desktop only */
+      #siteHeader {
+        top: 20px !important;
+        left: 20px !important;
+        right: 20px !important;
+        border-radius: 18px !important;
+        box-shadow: var(--panel-shadow);
+        background: linear-gradient(180deg, rgba(10,10,15,0.65), rgba(8,8,12,0.55));
+        border: 1px solid rgba(34,197,94,0.08);
+      }
+      #siteHeader .container { padding-top: 0.8rem; padding-bottom: 0.8rem; }
+
+      /* Liquid glass effect for desktop nav links only (mobile nav unaffected) */
+      .desktop-nav a {
+        position: relative;
+        padding: 0.5rem 0.9rem;
+        border-radius: 999px;
+        color: #dfffe6;
+        background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        border: 1px solid rgba(255,255,255,0.04);
+        backdrop-filter: blur(8px) saturate(140%);
+        -webkit-backdrop-filter: blur(8px) saturate(140%);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.55), 0 0 10px rgba(34,197,94,0.04);
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
+      }
+      .desktop-nav a:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--neon-glow), 0 14px 40px rgba(0,0,0,0.6);
+        color: #fff;
+        background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(255,255,255,0.02));
+      }
+      .desktop-nav a.active, .desktop-nav a[aria-current="page"] {
+        background: linear-gradient(90deg, rgba(34,197,94,0.08), rgba(34,197,94,0.03));
+        box-shadow: 0 10px 30px rgba(34,197,94,0.12), var(--neon-glow);
+        color: #fff;
+      }
+
+      /* subtle decorative bottom glow that won't show on mobile */
+      #siteHeader::after {
+        content: "";
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: -8px;
+        height: 8px;
+        background: linear-gradient(90deg, transparent, rgba(34,197,94,0.02), transparent);
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
+        pointer-events: none;
+      }
+    }
+
+    /* flip cards (about) */
+    .flip-card {
+      background-color: transparent; height: 200px; perspective: 1000px;
+    }
+    .flip-inner {
+      position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; background: rgba(34,197,94,0.1); border: 1px solid #22c55e;
+    }
+    .flip-back { transform: rotateY(180deg); }
+    /* reveal on scroll */
+    .reveal-on-scroll {
+      opacity: 0; transform: translateY(30px); transition: all 0.6s ease;
+    }
+    .revealed { opacity: 1; transform: translateY(0); }
+    /* stats counter */
+    .stat-number { font-family: 'Roboto Mono', monospace; }
+    /* AI assistant panel */
+    .ai-panel {
+      position: fixed; bottom: 100px; right: 20px; width: 340px; max-width: calc(100% - 40px);
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); border: 1px solid #22c55e;
+      border-radius: 28px; z-index: 200; display: none; flex-direction: column;
+      box-shadow: 0 20px 40px #00000080;
+    }
+    .ai-panel.open { display: flex; }
+    /* humanoid video element */
+    .humanoid-video {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      aspect-ratio: 1;
+      border-radius: 2rem;
+      border: none;
+      box-shadow: var(--humanoid-shadow), var(--inset-glow);
+      object-fit: cover;
+      animation: float 4s ease-in-out infinite;
+      filter: brightness(1.05) contrast(1.1) saturate(1.15);
+      transition: filter 0.3s ease;
+    }
+    .humanoid-video:hover {
+      filter: brightness(1.15) contrast(1.2) saturate(1.25);
+      box-shadow: var(--humanoid-shadow-hover), var(--inset-glow-hover);
+    }
+    @media (max-width: 768px) {
+      .humanoid-video {
+        max-width: 280px;
+      }
+    }
+    @media (max-width: 640px) {
+      .humanoid-video {
+        max-width: 240px;
+      }
+    }
+    /* robot head styles - kept for reference, can be removed if needed */
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    .robot-eyes { display: none; }
+    .robot-eye { display: none; }
+    .robot-antenna { display: none; }
+    .robot-mouth { display: none; }
+    /* demo terminal */
+    #demo-terminal { background: #0a0a0f; border: 1px solid #22c55e; border-radius: 16px; padding: 12px; font-family: 'Roboto Mono', monospace; height: 240px; overflow-y: auto; display: flex; flex-direction: column; }
+    #demo-output { color: #22c55e; flex: 1; overflow-y: auto; white-space: pre-wrap; font-size: 0.9rem; }
+    .demo-input-line { display: flex; margin-top: 8px; border-top: 1px solid #22c55e33; padding-top: 6px; }
+    #demo-input { background: transparent; border: none; outline: none; color: #22c55e; flex: 1; font-family: 'Roboto Mono', monospace; }
+    .demo-prompt { color: #22c55e; margin-right: 8px; }
+  </style>
+</head>
+<body class="dark overflow-x-hidden">
+
+  <!-- fixed backgrounds -->
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanlines"></div>
+
+  <!-- bottom nav UPGRADED: 7 items, fully responsive -->
+  <div class="bottom-nav" id="bottomNav">
+    <a href="#home" class="active"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#about"><i class="fas fa-users"></i><span>About</span></a>
+    <a href="#services"><i class="fas fa-shield"></i><span>Services</span></a>
+    <a href="#projects"><i class="fas fa-code-branch"></i><span>Work</span></a>
+    <a href="#demos"><i class="fas fa-flask"></i><span>Play</span></a>
+    <a href="#team"><i class="fas fa-user-tie"></i><span>Team</span></a>
+    <a href="#contact"><i class="fas fa-envelope"></i><span>Contact</span></a>
+  </div>
+
+  <!-- fixed header (curved on mobile, no get in touch, no hamburger) -->
+  <header id="siteHeader" class="fixed top-0 left-0 right-0 z-30 ios-26-glass">
+    <div class="container mx-auto px-4 py-2 sm:px-6 sm:py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="text-lg sm:text-2xl font-bold tracking-tighter text-white light:text-black">
+          <span class="text-[#22c55e]">◈</span>
+          <span class="ml-2">Phoenix 28</span>
+          <span class="text-xs sm:text-sm align-middle bg-[#22c55e] text-black px-2 py-0.5 rounded-full hidden sm:inline-block ml-3">v2.0</span>
+        </span>
+      </div>
+      <nav class="desktop-nav hidden md:flex gap-8 font-mono">
+        <a href="#home" class="hover:text-[#22c55e] transition-colors">Home</a>
+        <a href="#about" class="hover:text-[#22c55e]">About</a>
+        <a href="#services" class="hover:text-[#22c55e]">Services</a>
+        <a href="#projects" class="hover:text-[#22c55e]">Projects</a>
+        <a href="#demos" class="hover:text-[#22c55e]">Demos</a>
+        <a href="#team" class="hover:text-[#22c55e]">Team</a>
+        <a href="#contact" class="hover:text-[#22c55e]">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10 container mx-auto px-4 md:px-8">
+
+    <!-- Hero Section (robot head instead of orb) -->
+    <section id="home" class="min-h-[90vh] flex items-center relative mb-20">
+      <div class="grid md:grid-cols-2 gap-10 w-full">
+        <div class="reveal-on-scroll">
+          <h1 class="text-5xl md:text-7xl font-black leading-tight">
+            <span class="glitch">Where Innovation</span><br>
+            <span class="text-[#22c55e] glitch" style="animation-delay:0.2s;">Meets Security</span>
+          </h1>
+          <div class="h-16 my-6 font-mono text-2xl">
+            <span class="text-[#22c55e]">$></span> <span id="dynamicText"></span><span class="terminal-cursor"></span>
+          </div>
+          <p class="text-gray-300 light:text-gray-700 max-w-lg text-lg mb-8"><i class="fas fa-shield-halved text-[#22c55e] mr-2"></i>We build AI, cloud & blockchain solutions that are scalable, secure, and ahead of the curve.</p>
+          <div class="flex flex-wrap gap-4">
+            <a href="#projects" class="bg-[#22c55e] text-black px-8 py-3 rounded-full font-bold text-lg shadow-lg flex items-center gap-2">View Our Work <i class="fas fa-arrow-right"></i></a>
+            <a href="#contact" class="border border-[#22c55e] px-8 py-3 rounded-full font-bold text-[#22c55e] text-lg">Contact Us</a>
+          </div>
+          <!-- terminal widget -->
+          <div class="ios-26-glass-dark p-5 mt-10 font-mono text-sm max-w-md">
+            <div class="flex gap-2 mb-2"><span class="text-[#22c55e]">●</span> LIVE STATUS</div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>Active Projects: <span class="text-[#22c55e] stat-counter" data-target="12">0</span></div>
+              <div>Uptime: <span class="text-[#22c55e] stat-counter" data-target="99.99">0</span>%</div>
+              <div>AI Status: <span class="text-[#22c55e]">Online</span></div>
+              <div>Team: <span class="text-[#22c55e] stat-counter" data-target="8">0</span> experts</div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-center items-center">
+          <!-- humanoid video element -->
+          <video id="humanoidVideo" class="humanoid-video" aria-label="Humanoid demonstration video" autoplay muted loop playsinline>
+            <source src="humanoid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section (same, but keep) -->
+    <section id="about" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> about</h2>
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="ios-26-glass-dark p-8 rounded-3xl reveal-on-scroll">
+          <h3 class="text-2xl mb-4">Mission & Values</h3>
+          <p class="mb-4">Founded by <strong class="text-[#22c55e]">Pius Maina</strong> (see his <a href="#" class="underline">personal portfolio</a>), Phoenix 28 Tech delivers next‑gen tech with integrity. We merge AI, zero‑trust security, and elegant engineering.</p>
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="5">0</span><br>Years</div>
+            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="47">0</span><br>Projects</div>
+            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="100">0</span>%<br>Satisfaction</div>
+            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="12">0</span><br>Countries</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="flip-card reveal-on-scroll">
+            <div class="flip-inner">
+              <div class="flip-front flex items-center justify-center flex-col"><i class="fas fa-skull text-4xl text-[#22c55e] mb-2"></i><span class="text-xl">Our Story</span></div>
+              <div class="flip-back">Started in a garage with a dream to build unhackable AI. Today we serve Fortune 500s.</div>
+            </div>
+          </div>
+          <div class="flip-card reveal-on-scroll">
+            <div class="flip-inner">
+              <div class="flip-front flex items-center justify-center flex-col"><i class="fas fa-dragon text-4xl text-[#22c55e] mb-2"></i><span class="text-xl">Why Phoenix</span></div>
+              <div class="flip-back">We rise from challenges. Every product is battle‑tested, resilient, and future‑proof.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> core services</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
+          <i class="fas fa-brain text-4xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl font-bold">AI & Machine Learning</h3>
+          <p class="text-sm my-3">Custom models, NLP, predictive analytics.</p>
+          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:90%"></div></div>
+        </div>
+        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
+          <i class="fas fa-shield-halved text-4xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl font-bold">Cloud Security</h3>
+          <p class="text-sm my-3">Zero‑trust architecture, threat monitoring.</p>
+          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:95%"></div></div>
+        </div>
+        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
+          <i class="fas fa-bug text-4xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl font-bold">Penetration Testing</h3>
+          <p class="text-sm my-3">Ethical hacking, vulnerability assessments.</p>
+          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:88%"></div></div>
+        </div>
+        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
+          <i class="fas fa-link text-4xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl font-bold">Blockchain Solutions</h3>
+          <p class="text-sm my-3">Smart contracts, DeFi, identity.</p>
+          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:82%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects carousel (unchanged) -->
+    <section id="projects" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> featured projects</h2>
+      <div class="relative h-[500px] flex items-center justify-center" id="projectCarousel">
+        <div class="project-stack absolute w-full max-w-2xl transition-all duration-500 translate-y-0 opacity-100 z-30 ios-26-glass-dark p-6 rounded-3xl" data-index="0">
+          <div class="flex gap-4"><i class="fas fa-robot text-5xl text-[#22c55e]"></i><div><h3 class="text-2xl">Aegis AI</h3><p class="text-sm">Fraud detection for fintech</p></div></div>
+          <div class="flex flex-wrap gap-2 my-3"><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">PyTorch</span><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">Kafka</span><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">AWS</span></div>
+          <div class="text-[#22c55e] mb-2">↑ 40% performance gain</div>
+          <div class="flex gap-4"><button class="border border-[#22c55e] px-4 py-2 rounded-full demo-trigger" data-demo="aegis">Live Demo</button><button class="bg-[#22c55e] text-black px-4 py-2 rounded-full">Case Study</button></div>
+        </div>
+        <div class="project-stack absolute w-full max-w-2xl transition-all duration-500 translate-y-2 opacity-60 scale-95 z-20 ios-26-glass-dark p-6 rounded-3xl pointer-events-none" data-index="1">
+          <div class="flex gap-4"><i class="fas fa-cloud text-5xl text-[#22c55e]"></i><div><h3 class="text-2xl">Nimbus Secure</h3><p class="text-sm">Zero‑trust cloud mesh</p></div></div>
+          <div class="flex flex-wrap gap-2 my-3"><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">Kubernetes</span><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">Istio</span></div>
+          <div class="text-[#22c55e] mb-2">🔒 100% compliance</div>
+          <div class="flex gap-4"><button class="border border-[#22c55e] px-4 py-2 rounded-full demo-trigger" data-demo="nimbus">Live Demo</button><button class="bg-[#22c55e] text-black px-4 py-2 rounded-full">Case Study</button></div>
+        </div>
+        <div class="project-stack absolute w-full max-w-2xl transition-all duration-500 translate-y-4 opacity-30 scale-90 z-10 ios-26-glass-dark p-6 rounded-3xl pointer-events-none" data-index="2">
+          <div class="flex gap-4"><i class="fas fa-database text-5xl text-[#22c55e]"></i><div><h3 class="text-2xl">ChainVault</h3><p class="text-sm">Private blockchain for healthcare</p></div></div>
+          <div class="flex flex-wrap gap-2 my-3"><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">Hyperledger</span><span class="bg-[#22c55e20] px-3 py-1 rounded-full text-xs border border-[#22c55e]">Solidity</span></div>
+          <div class="text-[#22c55e] mb-2">⛓️ 10k TPS</div>
+          <div class="flex gap-4"><button class="border border-[#22c55e] px-4 py-2 rounded-full demo-trigger" data-demo="chainvault">Live Demo</button><button class="bg-[#22c55e] text-black px-4 py-2 rounded-full">Case Study</button></div>
+        </div>
+        <button id="carouselPrev" aria-label="Previous project" class="absolute left-4 z-40 bg-black/50 p-3 rounded-full text-[#22c55e]"><i class="fas fa-chevron-left"></i></button>
+        <button id="carouselNext" aria-label="Next project" class="absolute right-4 z-40 bg-black/50 p-3 rounded-full text-[#22c55e]"><i class="fas fa-chevron-right"></i></button>
+        <div class="absolute bottom-0 flex gap-2 z-40" id="carouselDots"><span class="dot w-3 h-3 rounded-full bg-[#22c55e]"></span><span class="dot w-3 h-3 rounded-full bg-gray-500"></span><span class="dot w-3 h-3 rounded-full bg-gray-500"></span></div>
+      </div>
+    </section>
+
+    <!-- DEMOS SECTION: interactive terminal fully functional -->
+    <section id="demos" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> live demos / playground</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+          <i class="fas fa-microchip text-5xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl">Aegis AI Playground</h3>
+          <p class="text-sm my-2">Test fraud detection model</p>
+          <button class="demo-launch border border-[#22c55e] px-4 py-2 rounded-full" data-demo="aegis">Launch Demo</button>
+        </div>
+        <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+          <i class="fas fa-shield text-5xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl">Nimbus Secure Simulator</h3>
+          <p class="text-sm my-2">Explore zero-trust mesh</p>
+          <button class="demo-launch border border-[#22c55e] px-4 py-2 rounded-full" data-demo="nimbus">Launch Demo</button>
+        </div>
+        <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+          <i class="fas fa-link text-5xl text-[#22c55e] mb-3"></i>
+          <h3 class="text-xl">ChainVault Explorer</h3>
+          <p class="text-sm my-2">Browse healthcare blockchain</p>
+          <button class="demo-launch border border-[#22c55e] px-4 py-2 rounded-full" data-demo="chainvault">Launch Demo</button>
+        </div>
+      </div>
+      <!-- interactive terminal (FULLY FUNCTIONAL) -->
+      <div class="ios-26-glass-dark p-6 rounded-3xl mt-8" id="demo-terminal">
+        <div class="flex items-center gap-2 mb-2"><i class="fas fa-terminal text-[#22c55e]"></i><span class="text-[#22c55e]">Demo Console (type 'help')</span></div>
+        <div id="demo-output" class="demo-output h-32 overflow-y-auto font-mono text-sm">> Phoenix 28 interactive terminal. Type a command or click a demo.</div>
+        <div class="demo-input-line">
+          <span class="demo-prompt">$></span>
+          <input type="text" id="demo-input" placeholder="help / clear / aegis / nimbus / chainvault / about" class="flex-1 bg-transparent outline-none text-[#22c55e] font-mono">
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section (social links clickable) -->
+    <section id="team" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> core team</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
+          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-[#22c55e] to-black flex items-center justify-center text-4xl font-bold border-4 border-[#22c55e]">PM</div>
+          <h3 class="text-xl mt-4">Pius Maina</h3>
+          <p class="text-[#22c55e]">CEO & Founder</p>
+          <p class="text-sm my-2">Visionary architect, ex‑SpaceX security.</p>
+          <div class="flex justify-center gap-3 mt-2">
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter text-[#22c55e] hover:text-white"></i></a>
+          </div>
+        </div>
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
+          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-black flex items-center justify-center text-4xl">JD</div>
+          <h3 class="text-xl mt-4">Jane Doe</h3>
+          <p class="text-[#22c55e]">CTO, AI research</p>
+          <p class="text-sm my-2">20+ years in deep learning.</p>
+          <div class="flex justify-center gap-3 mt-2">
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+          </div>
+        </div>
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
+          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-black flex items-center justify-center text-4xl">MC</div>
+          <h3 class="text-xl mt-4">Mary Chen</h3>
+          <p class="text-[#22c55e]">Lead Security</p>
+          <p class="text-sm my-2">Zero‑day hunter.</p>
+          <div class="flex justify-center gap-3 mt-2">
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+          </div>
+        </div>
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
+          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-orange-500 to-black flex items-center justify-center text-4xl">AK</div>
+          <h3 class="text-xl mt-4">Alex Kim</h3>
+          <p class="text-[#22c55e]">Blockchain lead</p>
+          <p class="text-sm my-2">DeFi protocols architect.</p>
+          <div class="flex justify-center gap-3 mt-2">
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
+            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section (unchanged) -->
+    <section id="contact" class="my-28">
+      <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> contact</h2>
+      <div class="grid lg:grid-cols-2 gap-8">
+        <div class="ios-26-glass-dark p-8 rounded-3xl">
+          <h3 class="text-2xl mb-4">Let's talk</h3>
+          <p class="mb-2"><i class="fas fa-envelope text-[#22c55e] mr-2"></i> info@phoenix28.tech</p>
+          <p class="mb-2"><i class="fas fa-phone text-[#22c55e] mr-2"></i> +1 (800) 555-0128</p>
+          <p class="mb-6"><i class="fas fa-map-pin text-[#22c55e] mr-2"></i> San Francisco / Nairobi (remote)</p>
+          <div class="flex gap-4 text-2xl"><i class="fab fa-github"></i><i class="fab fa-linkedin"></i><i class="fab fa-x-twitter"></i></div>
+          <div class="mt-8 h-32 bg-black/30 rounded-2xl flex items-center justify-center border border-[#22c55e]">[ map placeholder ]</div>
+        </div>
+        <div class="ios-26-glass-dark p-8 rounded-3xl">
+          <form id="contactForm" class="space-y-4">
+            <input type="text" name="user_name" placeholder="Your name" class="w-full p-3 rounded-xl bg-black/40 border border-[#22c55e] text-white" required>
+            <input type="email" name="user_email" placeholder="Email" class="w-full p-3 rounded-xl bg-black/40 border border-[#22c55e]" required>
+            <input type="text" name="subject" placeholder="Subject" class="w-full p-3 rounded-xl bg-black/40 border border-[#22c55e]">
+            <textarea name="message" rows="4" placeholder="Message" class="w-full p-3 rounded-xl bg-black/40 border border-[#22c55e]" required></textarea>
+            <button type="submit" class="bg-[#22c55e] text-black px-8 py-3 rounded-full w-full font-bold">Send message</button>
+          </form>
+          <div id="formSuccess" class="hidden mt-4 p-3 bg-[#22c55e20] border border-[#22c55e] rounded-xl">✓ Message sent! We'll reply soon.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (keep as is but remove mobile menu related) -->
+  <footer class="ios-26-glass-dark mt-20 py-10 px-6 relative z-20">
+    <div class="container mx-auto grid md:grid-cols-4 gap-8 text-sm">
+      <div><span class="text-2xl font-mono">◈ Phoenix 28 Tech</span><p class="mt-2 opacity-70">AI, cloud & security that rise from challenges.</p><div class="flex gap-4 mt-4 text-2xl"><i class="fab fa-github hover:text-[#22c55e]"></i><i class="fab fa-linkedin hover:text-[#22c55e]"></i><i class="fab fa-x-twitter hover:text-[#22c55e]"></i></div></div>
+      <div><h4 class="font-bold text-[#22c55e] mb-2">Company</h4><ul class="space-y-1 opacity-80"><li><a href="#about">About</a></li><li><a href="#team">Team</a></li><li><a href="#careers">Careers</a> <span class="text-[#22c55e] text-xs">(coming)</span></li><li><a href="press.html" onclick="navigatePage(event)">Press</a></li></ul></div>
+      <div><h4 class="font-bold text-[#22c55e] mb-2">Resources</h4><ul class="space-y-1 opacity-80"><li><a href="blog.html" onclick="navigatePage(event)">Blog</a></li><li><a href="whitepapers.html" onclick="navigatePage(event)">Whitepapers</a></li><li><a href="documentation.html" onclick="navigatePage(event)">Documentation</a></li><li><a href="support.html" onclick="navigatePage(event)">Support</a></li></ul></div>
+      <div><h4 class="font-bold text-[#22c55e] mb-2">Newsletter</h4><p class="opacity-70 text-xs mb-2">Get latest updates on AI & security.</p><div class="flex"><input type="email" placeholder="your@email.com" class="bg-black/40 border border-[#22c55e] p-2 rounded-l-xl w-full"><button class="bg-[#22c55e] text-black px-4 rounded-r-xl"><i class="fas fa-paper-plane"></i></button></div></div>
+    </div>
+    <div class="border-t border-[#22c55e33] mt-8 pt-4 text-center text-xs opacity-60 flex flex-wrap justify-between items-center">
+      <span>© 2026 Phoenix 28 Tech. All rights reserved. Meet the <a href="#" class="underline hover:text-[#22c55e]">founder</a>.</span>
+      <div class="flex gap-4"><button id="fontDecrease" class="border p-2 rounded-full"><i class="fas fa-minus"></i></button><button id="fontIncrease" class="border p-2 rounded-full"><i class="fas fa-plus"></i></button><button id="hcToggle" class="border p-2 rounded-full"><i class="fas fa-adjust"></i></button><button id="rmToggle" class="border p-2 rounded-full"><i class="fas fa-eye-slash"></i></button></div>
+    </div>
+    <div class="font-mono text-sm my-4 text-center"><span id="typewriterFooter"></span><span class="terminal-cursor"></span></div>
+    <button id="backToTop" aria-label="Back to top" class="bg-[#22c55e] text-black p-3 rounded-full fixed bottom-20 right-4 z-50"><i class="fas fa-arrow-up"></i></button>
+    <button id="installPWA" class="border border-[#22c55e] px-4 py-1 rounded-full text-sm mt-2 hidden mx-auto block">Install App</button>
+  </footer>
+
+  <!-- AI Assistant Panel (modern icon, improved interactions) -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="flex justify-between items-center p-4 border-b border-[#22c55e]">
+      <span><i class="fas fa-robot text-[#22c55e] mr-2"></i> Phoenix AI <span class="text-xs">(enhanced)</span></span>
+      <button id="closeAI"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="p-4 h-64 overflow-y-auto" id="aiMessages">
+      <div class="mb-2 text-[#22c55e]">AI: Hello! I'm your assistant. Ask me about services, team, demos, or even tell me a joke. 😊</div>
+    </div>
+    <div class="p-4 border-t border-[#22c55e] flex">
+      <input type="text" id="aiInput" placeholder="Ask anything..." class="flex-1 bg-black/40 border border-[#22c55e] p-2 rounded-l-xl">
+      <button id="aiSend" class="bg-[#22c55e] text-black px-4 rounded-r-xl">send</button>
+    </div>
+  </div>
+  <button id="aiToggle" class="fixed bottom-20 right-4 bg-[#22c55e] text-black p-4 rounded-full shadow-2xl z-[150]"><i class="fas fa-robot text-xl"></i></button>
+
+  <script>
+    (function() {
+      emailjs.init("JKG2eT3nGUbjFSlFc"); // public key
+
+      // ------ Matrix rain (rAF + debounced resize) ------
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, columns, drops;
+      const matrixFontSize = 14;
+      function initMatrix() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.max(1, Math.floor(width / matrixFontSize));
+        drops = Array(columns).fill(1);
+        ctx.font = matrixFontSize + 'px monospace';
+      }
+      let resizeTimer;
+      window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMatrix, 120); });
+      initMatrix();
+      const letters = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+      function drawMatrixFrame() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = '#22c55e';
+        for (let i = 0; i < drops.length; i++) {
+          const text = letters[Math.floor(Math.random() * letters.length)];
+          ctx.fillText(text, i * matrixFontSize, drops[i] * matrixFontSize);
+          if (drops[i] * matrixFontSize > height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+      }
+      let lastMatrixTick = 0;
+      const matrixFpsInterval = 50; // ~20 FPS
+      function matrixLoop(ts) {
+        if (!lastMatrixTick) lastMatrixTick = ts;
+        const elapsed = ts - lastMatrixTick;
+        if (elapsed > matrixFpsInterval) {
+          drawMatrixFrame();
+          lastMatrixTick = ts - (elapsed % matrixFpsInterval);
+        }
+        requestAnimationFrame(matrixLoop);
+      }
+      requestAnimationFrame(matrixLoop);
+
+      // ------ dynamic text rotator ------
+      const words = ['AI solutions', 'secure clouds', 'scalable apps', 'blockchain', 'zero‑trust', 'ethical hacking'];
+      let idx = 0;
+      const dynSpan = document.getElementById('dynamicText');
+      function rotateWord() {
+        if (dynSpan) dynSpan.innerText = words[idx % words.length];
+        idx++;
+      }
+      rotateWord(); setInterval(rotateWord, 2000);
+
+      // ------ stats counters ------
+      const counters = document.querySelectorAll('.stat-counter');
+      const speed = 200;
+      counters.forEach(counter => {
+        const update = () => {
+          const target = +counter.getAttribute('data-target');
+          const current = +counter.innerText;
+          const inc = target / speed;
+          if (current < target) { counter.innerText = Math.ceil(current + inc); setTimeout(update, 10); }
+          else counter.innerText = target;
+        };
+        update();
+      });
+
+      // ------ reveal on scroll ------
+      const reveals = document.querySelectorAll('.reveal-on-scroll');
+      const observer = new IntersectionObserver(entries => entries.forEach(e => e.target.classList.toggle('revealed', e.isIntersecting)), { threshold: 0.1 });
+      reveals.forEach(r => observer.observe(r));
+
+      // ------ theme & accessibility (keep same) ------
+      function toggleLight() { document.body.classList.toggle('light'); }
+      document.querySelectorAll('#highContrastToggle, #hcToggle').forEach(btn => btn?.addEventListener('click', toggleLight));
+      function toggleReducedMotion() { document.body.classList.toggle('reduce-motion'); }
+      document.querySelectorAll('#reduceMotionToggle, #rmToggle').forEach(btn => btn?.addEventListener('click', toggleReducedMotion));
+
+      // Font size adjustment (consolidated handlers)
+      const html = document.documentElement;
+      function adjustFont(delta) {
+        const size = parseFloat(getComputedStyle(html).fontSize) || 16;
+        html.style.fontSize = Math.max(12, size + delta) + 'px';
+      }
+      document.getElementById('fontIncrease')?.addEventListener('click', () => adjustFont(1));
+      document.getElementById('fontDecrease')?.addEventListener('click', () => adjustFont(-1));
+
+      // ------ AI assistant (enhanced) ------
+      const aiPanel = document.getElementById('aiPanel');
+      const aiToggle = document.getElementById('aiToggle');
+      const closeAI = document.getElementById('closeAI');
+      aiToggle.addEventListener('click', () => aiPanel.classList.toggle('open'));
+      closeAI.addEventListener('click', () => aiPanel.classList.remove('open'));
+
+      const aiMessages = document.getElementById('aiMessages');
+      const aiInput = document.getElementById('aiInput');
+      const aiSend = document.getElementById('aiSend');
+
+      const knowledge = {
+        greetings: ['hello', 'hi', 'hey', 'greetings', 'yo'],
+        services: ['service', 'offer', 'provide', 'do you', 'what can you'],
+        team: ['team', 'member', 'who works', 'employee', 'founder', 'pius', 'jane', 'mary', 'alex'],
+        projects: ['project', 'case study', 'work', 'portfolio', 'aegis', 'nimbus', 'chainvault'],
+        demos: ['demo', 'try', 'playground', 'interactive', 'terminal'],
+        contact: ['contact', 'email', 'phone', 'reach', 'address'],
+        pricing: ['price', 'cost', 'pricing', 'plan'],
+        security: ['security', 'hack', 'cyber', 'protection', 'encryption'],
+        joke: ['joke', 'funny', 'laugh']
+      };
+
+      const responses = {
+        greetings: ['Hello! How can I assist you today? 😊', 'Hi there! 👋 Ask me anything about Phoenix 28.', 'Hey! Ready to explore?'],
+        services: 'We offer AI/ML, cloud security, pen-testing, blockchain, and full-stack engineering. Which interests you? 🔒',
+        team: 'Core team: Pius Maina (CEO), Jane Doe (CTO AI), Mary Chen (Lead Security), Alex Kim (Blockchain). All experts! 👥',
+        projects: 'Featured: Aegis AI (fraud), Nimbus Secure (zero-trust), ChainVault (healthcare). Check Projects section! 🚀',
+        demos: 'We have live demos! Try the interactive terminal or click demo buttons above. Type "aegis", "nimbus", or "chainvault" here. 🎮',
+        contact: 'Reach us at info@phoenix28.tech or +1 (800) 555-0128. 📧',
+        pricing: 'Custom pricing based on needs. Please contact us for a quote. 💼',
+        security: 'Zero-trust, pen-testing, threat monitoring – security is our core! 🛡️',
+        joke: 'Why did the AI go to therapy? It had too many neural issues! 😂',
+        default: "I'm not sure. Try asking about services, team, demos, or tell me a joke! 😅",
+      };
+
+      function getAIResponse(userMsg) {
+        const msg = userMsg.toLowerCase();
+        if (knowledge.greetings.some(g => msg.includes(g))) return responses.greetings[Math.floor(Math.random() * responses.greetings.length)];
+        if (knowledge.services.some(s => msg.includes(s))) return responses.services;
+        if (knowledge.team.some(t => msg.includes(t))) {
+          if (msg.includes('pius')) return "Pius Maina is our CEO, ex‑SpaceX security. Visionary! 🔥";
+          if (msg.includes('jane')) return "Jane Doe, CTO AI research, 20+ years deep learning. 🤖";
+          if (msg.includes('mary')) return "Mary Chen, Lead Security, zero‑day hunter. 🛡️";
+          if (msg.includes('alex')) return "Alex Kim, Blockchain lead, DeFi architect. ⛓️";
+          return responses.team;
+        }
+        if (knowledge.projects.some(p => msg.includes(p))) {
+          if (msg.includes('aegis')) return "Aegis AI: fraud detection, PyTorch/Kafka/AWS. 40% gain. 💳";
+          if (msg.includes('nimbus')) return "Nimbus Secure: zero-trust cloud, K8s/Istio. 100% compliant. ☁️";
+          if (msg.includes('chainvault')) return "ChainVault: private healthcare blockchain, Hyperledger. 10k TPS. 🏥";
+          return responses.projects;
+        }
+        if (knowledge.demos.some(d => msg.includes(d))) return responses.demos;
+        if (knowledge.contact.some(c => msg.includes(c))) return responses.contact;
+        if (knowledge.pricing.some(p => msg.includes(p))) return responses.pricing;
+        if (knowledge.security.some(s => msg.includes(s))) return responses.security;
+        if (knowledge.joke.some(j => msg.includes(j))) return responses.joke;
+        return responses.default;
+      }
+
+      function addMessage(sender, text) {
+        const msg = document.createElement('div');
+        msg.className = sender === 'user' ? 'text-right text-white mb-2' : 'text-[#22c55e] mb-2';
+        msg.innerText = (sender === 'user' ? 'You: ' : 'AI: ') + text;
+        aiMessages.appendChild(msg);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+      }
+
+      aiSend.addEventListener('click', sendAIMessage);
+      aiInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAIMessage(); });
+
+      function sendAIMessage() {
+        const q = aiInput.value.trim();
+        if (!q) return;
+        addMessage('user', q);
+        const reply = getAIResponse(q);
+        setTimeout(() => addMessage('ai', reply), 400);
+        aiInput.value = '';
+      }
+
+      // ------ Contact form emailjs ------
+      const form = document.getElementById('contactForm');
+      const successDiv = document.getElementById('formSuccess');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        emailjs.sendForm('service_czq99pi', 'template_m34bodq', form)
+          .then(() => {
+            successDiv.classList.remove('hidden');
+            form.reset();
+            setTimeout(() => successDiv.classList.add('hidden'), 4000);
+          }, (err) => alert('Error: ' + JSON.stringify(err)));
+      });
+
+      // ------ Back to top & smooth scroll ------
+      document.getElementById('backToTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // ------ typewriter footer effect ------
+      const footerSpan = document.getElementById('typewriterFooter');
+      const phrases = ['> build the future 🔥', '> secure by design', '> phoenix rising', '> zero‑trust AI'];
+      let i = 0, j = 0;
+      function typewriter() {
+        if (i < phrases.length) {
+          const current = phrases[i];
+          if (j <= current.length) {
+            footerSpan.innerText = current.substring(0, j);
+            j++;
+            setTimeout(typewriter, 100);
+          } else {
+            i++; j = 0;
+            setTimeout(typewriter, 2000);
+          }
+        } else { i = 0; typewriter(); }
+      }
+      typewriter();
+
+      // ------ PWA install button (placeholder) ------
+      const installBtn = document.getElementById('installPWA');
+      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installBtn.classList.remove('hidden'); });
+
+      // ------ Project carousel ------
+      const stacks = document.querySelectorAll('.project-stack');
+      const dots = document.querySelectorAll('.dot');
+      const prevBtn = document.getElementById('carouselPrev');
+      const nextBtn = document.getElementById('carouselNext');
+      let currentIndex = 0;
+      function updateCarousel(index) {
+        stacks.forEach((stack, i) => {
+          const offset = i - index;
+          if (offset === 0) {
+            stack.style.transform = 'translateY(0) scale(1)'; stack.style.opacity = '1'; stack.style.zIndex = '30'; stack.style.pointerEvents = 'auto';
+          } else if (offset === 1 || (index === 2 && i === 0)) {
+            stack.style.transform = 'translateY(2px) scale(0.95)'; stack.style.opacity = '0.6'; stack.style.zIndex = '20'; stack.style.pointerEvents = 'none';
+          } else {
+            stack.style.transform = 'translateY(4px) scale(0.9)'; stack.style.opacity = '0.3'; stack.style.zIndex = '10'; stack.style.pointerEvents = 'none';
+          }
+        });
+        dots.forEach((dot, i) => dot.style.backgroundColor = i === index ? '#22c55e' : 'gray');
+      }
+      prevBtn.addEventListener('click', () => { currentIndex = (currentIndex - 1 + stacks.length) % stacks.length; updateCarousel(currentIndex); });
+      nextBtn.addEventListener('click', () => { currentIndex = (currentIndex + 1) % stacks.length; updateCarousel(currentIndex); });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { currentIndex = i; updateCarousel(currentIndex); }));
+      updateCarousel(0);
+
+      // ------ FULLY INTERACTIVE TERMINAL ------
+      const demoOutput = document.getElementById('demo-output');
+      const demoInput = document.getElementById('demo-input');
+      const demoLaunchButtons = document.querySelectorAll('.demo-launch, .demo-trigger');
+
+      function writeToTerminal(text) {
+        const line = document.createElement('div');
+        line.textContent = '> ' + text;
+        demoOutput.appendChild(line);
+        demoOutput.scrollTop = demoOutput.scrollHeight;
+      }
+
+      demoLaunchButtons.forEach(btn => btn.addEventListener('click', (e) => {
+        const demo = e.currentTarget.dataset.demo;
+        if (demo) handleDemoCommand(demo);
+      }));
+
+      function handleDemoCommand(cmd) {
+        if (cmd === 'aegis') {
+          writeToTerminal('Aegis AI: Fraud score 0.02 (safe) ✅');
+        } else if (cmd === 'nimbus') {
+          writeToTerminal('Nimbus Secure: Mesh active, 0 threats 🛡️');
+        } else if (cmd === 'chainvault') {
+          writeToTerminal('ChainVault: Block #12897 verified 🔗');
+        } else {
+          writeToTerminal(`Unknown demo: ${cmd}`);
+        }
+      }
+
+      demoInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const val = demoInput.value.trim();
+          if (val === '') return;
+          writeToTerminal(`$ ${val}`);
+          if (val.toLowerCase() === 'help') {
+            writeToTerminal('Available commands: help, clear, aegis, nimbus, chainvault, about, team');
+          } else if (val.toLowerCase() === 'clear') {
+            demoOutput.innerHTML = '';
+            writeToTerminal('Terminal cleared.');
+          } else if (val.toLowerCase() === 'about') {
+            writeToTerminal('Phoenix 28 Tech – AI, cloud, security. Founded 2021.');
+          } else if (val.toLowerCase() === 'team') {
+            writeToTerminal('Core team: Pius, Jane, Mary, Alex. See Team section.');
+          } else if (['aegis', 'nimbus', 'chainvault'].includes(val.toLowerCase())) {
+            handleDemoCommand(val.toLowerCase());
+          } else {
+            writeToTerminal(`Command not recognized: ${val}. Type 'help'`);
+          }
+          demoInput.value = '';
+        }
+      });
+
+      // ------ Bottom nav active link ------
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.bottom-nav a');
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 100;
+          if (scrollY >= sectionTop) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+        });
+      });
+      // adjust main padding to avoid header overlap on load/resize
+      function adjustMainPadding() {
+        const header = document.getElementById('siteHeader');
+        const mainEl = document.querySelector('main');
+        if (!header || !mainEl) return;
+        const h = header.offsetHeight;
+        mainEl.style.paddingTop = (h + 12) + 'px';
+      }
+      window.addEventListener('load', adjustMainPadding);
+      window.addEventListener('resize', adjustMainPadding);
+    })();
+    
+    // Smooth page navigation
+    function navigatePage(event) {
+      event.preventDefault();
+      const href = event.currentTarget.href;
+      document.body.classList.add('page-exit');
+      setTimeout(() => {
+        window.location.href = href;
+      }, 400);
+    }
+    document.body.classList.add('page-enter');
+  </script>
+  <!-- fake service worker registration -->
+  <script> if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); } </script>
+</body>
+</html>

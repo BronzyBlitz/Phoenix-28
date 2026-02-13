@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phoenix 28 Tech · Support</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --glass-bg: rgba(20, 20, 30, 0.6);
+      --glass-border: rgba(34, 197, 94, 0.25);
+      --neon-green: #22c55e;
+      --neon-glow: 0 0 10px #22c55e, 0 0 20px rgba(34, 197, 94, 0.3);
+      --dark-bg: #0a0a0f;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--dark-bg);
+      color: #e0e0e0;
+    }
+    .ios-26-glass-dark {
+      background: rgba(8, 10, 15, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34,197,94,0.2);
+      box-shadow: var(--neon-glow);
+      border-radius: 1.5rem;
+    }
+    .faq-item {
+      border-bottom: 1px solid #22c55e33;
+      padding: 1rem 0;
+    }
+    .faq-question {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .faq-answer {
+      display: none;
+      padding-top: 1rem;
+      opacity: 0.8;
+    }
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+    body.page-exit {
+      animation: pageOut 0.4s ease-in-out forwards;
+    }
+    body.page-enter {
+      animation: pageIn 0.4s ease-in-out forwards;
+    }
+    /* Bottom Navigation - Mobile Only */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 40px;
+      z-index: 50;
+      padding: 10px 6px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.3);
+      justify-content: space-around;
+    }
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      main { padding-bottom: 120px; }
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #22c55e;
+      text-decoration: none;
+      transition: 0.2s;
+      flex: 1 0 0;
+      padding: 6px 0;
+    }
+    .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+    .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
+    .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="fixed top-5 left-5 right-5 z-30 ios-26-glass-dark" style="border-radius: 18px;">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-2" onclick="navigatePage(event)">
+        <span class="text-2xl font-bold tracking-tighter">
+          <span class="text-[#22c55e]">◈</span>
+          <span class="ml-2">Phoenix 28</span>
+        </span>
+      </a>
+      <nav class="flex gap-6 font-mono">
+        <a href="index.html" class="hover:text-[#22c55e] transition-colors" onclick="navigatePage(event)">← Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="relative z-10 container mx-auto px-4 pt-32 pb-20">
+    <h1 class="text-5xl font-mono mb-4"><span class="text-[#22c55e]">//</span> support</h1>
+    <p class="text-xl mb-12 opacity-80">We're here to help 24/7</p>
+
+    <!-- Quick Contact -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+        <i class="fas fa-envelope text-4xl text-[#22c55e] mb-3"></i>
+        <h3 class="text-xl font-bold">Email Support</h3>
+        <p class="text-sm opacity-70 mt-2">support@phoenix28.tech</p>
+        <p class="text-xs opacity-50 mt-1">Response within 2 hours</p>
+      </div>
+      <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+        <i class="fas fa-phone text-4xl text-[#22c55e] mb-3"></i>
+        <h3 class="text-xl font-bold">Emergency Line</h3>
+        <p class="text-sm opacity-70 mt-2">+1 (800) 555-0199</p>
+        <p class="text-xs opacity-50 mt-1">24/7 for critical issues</p>
+      </div>
+      <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
+        <i class="fas fa-comment text-4xl text-[#22c55e] mb-3"></i>
+        <h3 class="text-xl font-bold">Live Chat</h3>
+        <p class="text-sm opacity-70 mt-2">Available now</p>
+        <button class="mt-3 border border-[#22c55e] px-4 py-1 rounded-full text-sm">Start Chat</button>
+      </div>
+    </div>
+
+    <!-- Ticket Form -->
+    <div class="ios-26-glass-dark p-8 rounded-3xl mb-12">
+      <h2 class="text-2xl font-bold mb-6">Open a Support Ticket</h2>
+      <form class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <input type="text" placeholder="Full name" class="bg-black/40 border border-[#22c55e] p-3 rounded-xl">
+          <input type="email" placeholder="Email address" class="bg-black/40 border border-[#22c55e] p-3 rounded-xl">
+        </div>
+        <select class="w-full bg-black/40 border border-[#22c55e] p-3 rounded-xl">
+          <option>Select issue type</option>
+          <option>Technical Issue</option>
+          <option>Billing Question</option>
+          <option>Account Access</option>
+          <option>Feature Request</option>
+          <option>Security Concern</option>
+        </select>
+        <input type="text" placeholder="Subject" class="w-full bg-black/40 border border-[#22c55e] p-3 rounded-xl">
+        <textarea rows="5" placeholder="Describe your issue in detail..." class="w-full bg-black/40 border border-[#22c55e] p-3 rounded-xl"></textarea>
+        <button class="bg-[#22c55e] text-black px-8 py-3 rounded-full font-bold">Submit Ticket</button>
+      </form>
+    </div>
+
+    <!-- FAQ -->
+    <div class="ios-26-glass-dark p-8 rounded-3xl">
+      <h2 class="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+      
+      <div class="faq-item active">
+        <div class="faq-question flex justify-between items-center">
+          <span>How do I reset my API key?</span>
+          <i class="fas fa-chevron-down text-[#22c55e]"></i>
+        </div>
+        <div class="faq-answer">
+          You can reset your API key from the dashboard under Settings > API Keys. Click "Regenerate" next to the key you want to reset. Note that this will immediately invalidate the old key.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question flex justify-between items-center">
+          <span>What are your support hours?</span>
+          <i class="fas fa-chevron-down text-[#22c55e]"></i>
+        </div>
+        <div class="faq-answer">
+          Email support is available 24/7 with responses within 2 hours. Phone support for critical issues is also 24/7. Live chat is available Monday-Friday, 9am-8pm EST.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question flex justify-between items-center">
+          <span>Do you offer SLA guarantees?</span>
+          <i class="fas fa-chevron-down text-[#22c55e]"></i>
+        </div>
+        <div class="faq-answer">
+          Yes, enterprise customers receive 99.99% uptime SLA and guaranteed 30-minute response time for critical issues. Contact sales for details.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question flex justify-between items-center">
+          <span>How do I report a security vulnerability?</span>
+          <i class="fas fa-chevron-down text-[#22c55e]"></i>
+        </div>
+        <div class="faq-answer">
+          Please email security@phoenix28.tech with details. We have a responsible disclosure program and bounty rewards for verified vulnerabilities.
+        </div>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="mt-8 p-4 ios-26-glass-dark rounded-3xl flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 bg-[#22c55e] rounded-full pulse-glow"></div>
+        <span>All systems operational</span>
+      </div>
+      <a href="#" class="text-[#22c55e] text-sm">Status Page →</a>
+    </div>
+  </main>
+
+  <footer class="ios-26-glass-dark mt-10 py-8 relative z-20">
+    <div class="container mx-auto text-center">
+      <p>© 2026 Phoenix 28 Tech. <a href="index.html" class="text-[#22c55e] hover:underline" onclick="navigatePage(event)">Back to Home</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple FAQ toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('active');
+        const icon = question.querySelector('i');
+        if (item.classList.contains('active')) {
+          icon.classList.remove('fa-chevron-down');
+          icon.classList.add('fa-chevron-up');
+        } else {
+          icon.classList.remove('fa-chevron-up');
+          icon.classList.add('fa-chevron-down');
+        }
+      });
+    });
+  </script>
+
+  <!-- Bottom Navigation - Mobile -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" onclick="navigatePage(event)"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="blog.html" onclick="navigatePage(event)"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+    <a href="documentation.html" onclick="navigatePage(event)"><i class="fas fa-book"></i><span>Docs</span></a>
+    <a href="whitepapers.html" onclick="navigatePage(event)"><i class="fas fa-file-pdf"></i><span>Papers</span></a>
+    <a href="press.html" onclick="navigatePage(event)"><i class="fas fa-microphone"></i><span>Press</span></a>
+    <a href="support.html" class="active" onclick="navigatePage(event)"><i class="fas fa-headset"></i><span>Support</span></a>
+  </nav>
+</body>
+</html>
