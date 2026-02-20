@@ -20,6 +20,14 @@
       background-color: var(--dark-bg);
       color: #e0e0e0;
     }
+    /* Hide scrollbars for all devices */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
     .ios-26-glass-dark {
       background: rgba(8, 10, 15, 0.7);
       backdrop-filter: blur(16px);
@@ -34,6 +42,12 @@
     .press-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 0 30px #22c55e;
+    }
+    nav a {
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      text-shadow: 0 0 10px #22c55e;
     }
     @keyframes pageIn {
       from { opacity: 0; transform: translateY(15px); }
@@ -85,6 +99,332 @@
     .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
     .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
     .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(34, 197, 94, 0.2);
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      animation: slideUp 0.4s ease-out;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+    }
+    .modal-content::-webkit-scrollbar {
+      display: none; /* Chrome, Safari */
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: #22c55e;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 101;
+    }
+    .close-btn:hover {
+      background: rgba(34, 197, 94, 0.3);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+      transform: rotate(90deg);
+    }
+    /* Tab System */
+    .modal-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 20px 30px 0;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+    .modal-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      background: transparent;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: rgba(34, 197, 94, 0.6);
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tab-btn:hover {
+      border-color: rgba(34, 197, 94, 0.5);
+      color: rgba(34, 197, 94, 0.8);
+    }
+    .tab-btn.active {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: #22c55e;
+      color: #22c55e;
+      box-shadow: 0 -4px 0 #22c55e;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeInScale 0.3s ease-out;
+    }
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .section-icon {
+      font-size: 20px;
+      color: #22c55e;
+      margin-right: 8px;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+      margin: 20px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #22c55e, rgba(34, 197, 94, 0.2));
+    }
+    .timeline-item {
+      padding-bottom: 20px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -34px;
+      top: 2px;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border: 2px solid rgba(10, 10, 15, 0.95);
+      border-radius: 50%;
+    }
+    .timeline-item strong {
+      color: #22c55e;
+    }
+    .copy-btn {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    .copy-btn:hover {
+      background: rgba(34, 197, 94, 0.25);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+    }
+    .copy-btn.copied {
+      background: rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .stat-item {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .stat-item:hover {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      transform: translateY(-2px);
+    }
+    .stat-item .icon {
+      font-size: 24px;
+      color: #22c55e;
+      margin-bottom: 6px;
+    }
+    .stat-item .number {
+      font-size: 20px;
+      font-weight: bold;
+      color: #22c55e;
+      margin-bottom: 2px;
+    }
+    .stat-item .text {
+      font-size: 11px;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .modal-header {
+      animation: slideDown 0.5s ease-out;
+    }
+    .modal-body {
+      animation: slideUp 0.5s ease-out 0.1s backwards;
+    }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .modal-header {
+      padding: 40px 30px 20px;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, transparent 100%);
+    }
+    .modal-body {
+      padding: 30px;
+    }
+    .modal-body h3 {
+      color: #22c55e;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-body h3:first-child {
+      margin-top: 0;
+    }
+    .modal-body h3::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+    .modal-body p {
+      line-height: 1.8;
+      color: #d0d0d0;
+      margin-bottom: 16px;
+    }
+    .highlight-box {
+      background: rgba(34, 197, 94, 0.08);
+      border-left: 3px solid #22c55e;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .highlight-box strong {
+      color: #22c55e;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .metric-card {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .metric-card .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #22c55e;
+      margin-bottom: 4px;
+    }
+    .metric-card .label {
+      font-size: 12px;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        max-height: 85vh;
+        border-radius: 1.5rem;
+      }
+      .modal-header {
+        padding: 30px 20px 16px;
+      }
+      .modal-body {
+        padding: 20px;
+      }
+      .close-btn {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -97,9 +437,10 @@
           <span class="ml-2">Phoenix 28</span>
         </span>
       </a>
-      <nav class="flex gap-6 font-mono">
-        <a href="index.html" class="hover:text-[#22c55e] transition-colors" onclick="navigatePage(event)">← Back to Home</a>
-      </nav>
+      <a href="index.html" onclick="navigatePage(event)" class="hidden md:flex items-center gap-2 border border-[#22c55e] text-[#22c55e] px-4 py-2 rounded-full font-medium text-sm hover:bg-[#22c55e20] transition">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back Home</span>
+      </a>
     </div>
   </header>
 
@@ -113,8 +454,8 @@
       <h2 class="text-3xl font-bold mt-2 mb-4">Phoenix 28 Secures $50M Series B to Expand AI Security Platform</h2>
       <p class="mb-6 max-w-3xl">Funding led by Accel with participation from existing investors. The company will use the funds to scale its engineering team and expand into European markets.</p>
       <div class="flex gap-4">
-        <button class="bg-[#22c55e] text-black px-6 py-2 rounded-full">Read Full Release</button>
-        <button class="border border-[#22c55e] px-6 py-2 rounded-full text-[#22c55e]">Download Kit</button>
+        <button id="readReleaseBtn" class="bg-[#22c55e] text-black px-6 py-2 rounded-full cursor-pointer font-semibold transition hover:shadow-lg hover:shadow-[#22c55e80]">Read Full Release</button>
+        <button class="border border-[#22c55e] px-6 py-2 rounded-full text-[#22c55e] cursor-pointer transition hover:bg-[#22c55e20]">Download Kit</button>
       </div>
     </div>
 
@@ -184,23 +525,9 @@
     </div>
   </main>
 
-  <footer class="ios-26-glass-dark mt-10 py-8 relative z-20">
-    <div class="container mx-auto text-center">
-      <p>© 2026 Phoenix 28 Tech. <a href="index.html" class="text-[#22c55e] hover:underline" onclick="navigatePage(event)">Back to Home</a></p>
-    </div>
-  </footer>
+  
 
-  <script>
-    function navigatePage(event) {
-      event.preventDefault();
-      const href = event.currentTarget.href;
-      document.body.classList.add('page-exit');
-      setTimeout(() => {
-        window.location.href = href;
-      }, 400);
-    }
-    document.body.classList.add('page-enter');
-  </script>
+  
 
   <!-- Bottom Navigation - Mobile -->
   <nav class="bottom-nav" id="bottomNav">
@@ -211,5 +538,316 @@
     <a href="press.html" class="active" onclick="navigatePage(event)"><i class="fas fa-microphone"></i><span>Press</span></a>
     <a href="support.html" onclick="navigatePage(event)"><i class="fas fa-headset"></i><span>Support</span></a>
   </nav>
+
+  <!-- Release Details Modal -->
+  <div class="modal-overlay" id="releaseModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeBtn" title="Close">×</button>
+      
+      <div class="modal-header">
+        <span class="text-[#22c55e] font-mono text-sm">📰 MAY 20, 2026 · FULL PRESS RELEASE</span>
+        <h2 class="text-3xl font-bold mt-3 text-white">Phoenix 28 Secures $50M Series B</h2>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="overview"><i class="fas fa-star"></i>Overview</button>
+        <button class="tab-btn" data-tab="financials"><i class="fas fa-chart-line"></i>Financials</button>
+        <button class="tab-btn" data-tab="product"><i class="fas fa-rocket"></i>Product</button>
+        <button class="tab-btn" data-tab="impact"><i class="fas fa-sparkles"></i>Impact</button>
+        <button class="tab-btn" data-tab="contact"><i class="fas fa-envelope"></i>Contact</button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div class="modal-body">
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+          <p class="text-lg mb-6 text-gray-300 flex items-start gap-3">
+            <span class="text-2xl">⚡</span>
+            <span>Leading AI security platform raises Series B funding to scale engineering team and expand into European markets</span>
+          </p>
+
+          <div class="highlight-box">
+            <strong>What This Means:</strong> Phoenix 28 has closed a $50 million Series B round led by Accel Partners, bringing total funding to $75 million. This accelerates the company's mission to secure AI systems at enterprise scale.
+          </div>
+
+          <h3><i class="fas fa-quote-left"></i> CEO Statement</h3>
+          <div class="highlight-box" style="border-left-color: #22c55e;">
+            <p style="margin: 0; line-height: 1.8; color: #d0d0d0;">
+              <strong>"This funding validates our mission to secure AI systems at enterprise scale,"</strong> said <strong>Pius Maina</strong>, CEO and co-founder of Phoenix 28. <strong>"As AI becomes more critical to business operations, the security challenges grow exponentially. We're building the infrastructure that enterprises need to deploy AI safely and confidently."</strong>
+            </p>
+          </div>
+
+          <h3><i class="fas fa-handshake"></i> Investor Confidence</h3>
+          <p>Accel Partners is known for supporting transformative infrastructure companies including Slack, Figma, and Notion. Leading this round demonstrates strong confidence in Phoenix 28's market opportunity and execution.</p>
+        </div>
+
+        <!-- Financials Tab -->
+        <div id="financials" class="tab-content">
+          <h3><i class="fas fa-dollar-sign"></i> Funding Metrics</h3>
+          <div class="stat-row">
+            <div class="stat-item">
+              <div class="icon">💰</div>
+              <div class="number">$50M</div>
+              <div class="text">Series B</div>
+            </div>
+            <div class="stat-item">
+              <div class="icon">📈</div>
+              <div class="number">$75M</div>
+              <div class="text">Total Raised</div>
+            </div>
+            <div class="stat-item">
+              <div class="icon">🎯</div>
+              <div class="number">3x</div>
+              <div class="text">YoY Growth</div>
+            </div>
+            <div class="stat-item">
+              <div class="icon">🏆</div>
+              <div class="number">95%</div>
+              <div class="text">Accuracy</div>
+            </div>
+          </div>
+
+          <h3><i class="fas fa-chart-bar"></i> Market Performance</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>Customer Base:</strong> 500+ enterprise customers across finance, healthcare, technology, and defense sectors
+            </div>
+            <div class="timeline-item">
+              <strong>Protection Scale:</strong> 50 billion AI inferences protected monthly
+            </div>
+            <div class="timeline-item">
+              <strong>Accuracy Rate:</strong> 95% threat detection accuracy
+            </div>
+            <div class="timeline-item">
+              <strong>Growth Rate:</strong> 3x year-over-year expansion
+            </div>
+          </div>
+
+          <h3><i class="fas fa-coins"></i> Capital Allocation</h3>
+          <p>Proceeds will be allocated to:</p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(34, 197, 94, 0.1);">
+              <span style="position: absolute; left: 0; color: #22c55e;">✓</span> 
+              <strong>Engineering Team Expansion</strong> - Doubling core development team
+            </li>
+            <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(34, 197, 94, 0.1);">
+              <span style="position: absolute; left: 0; color: #22c55e;">✓</span> 
+              <strong>Geographic Expansion</strong> - EMEA and APAC operations
+            </li>
+            <li style="padding: 12px 0; padding-left: 24px; position: relative; border-bottom: 1px solid rgba(34, 197, 94, 0.1);">
+              <span style="position: absolute; left: 0; color: #22c55e;">✓</span> 
+              <strong>R&D & Threat Intelligence</strong> - Advanced research labs
+            </li>
+            <li style="padding: 12px 0; padding-left: 24px; position: relative;">
+              <span style="position: absolute; left: 0; color: #22c55e;">✓</span> 
+              <strong>Infrastructure</strong> - Platform scaling and reliability
+            </li>
+          </ul>
+        </div>
+
+        <!-- Product Tab -->
+        <div id="product" class="tab-content">
+          <h3><i class="fas fa-shield"></i> Zero-Trust AI Platform</h3>
+          <p>Phoenix 28's platform provides real-time threat detection, prevention, and response across the entire AI stack. Using advanced behavioral analysis and machine learning to identify and neutralize emerging threats before they impact operations.</p>
+
+          <h3><i class="fas fa-sparkles"></i> Recent Innovations</h3>
+          <div style="display: grid; gap: 12px; margin: 20px 0;">
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 16px; border-radius: 10px;">
+              <p style="margin: 0; color: #22c55e; font-weight: 600;">🔄 Multi-Model Orchestration</p>
+              <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.8;">Governance for hybrid AI environments with unified control plane</p>
+            </div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 16px; border-radius: 10px;">
+              <p style="margin: 0; color: #22c55e; font-weight: 600;">⚠️ Threat Detection Engine</p>
+              <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.8;">Advanced prompt injection and jailbreak detection with behavioral analysis</p>
+            </div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 16px; border-radius: 10px;">
+              <p style="margin: 0; color: #22c55e; font-weight: 600;">✅ Compliance Automation</p>
+              <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.8;">SOC 2, ISO 27001, and HIPAA compliance automation</p>
+            </div>
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); padding: 16px; border-radius: 10px;">
+              <p style="margin: 0; color: #22c55e; font-weight: 600;">🔌 API-First Architecture</p>
+              <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.8;">Unified dashboard with extensible API ecosystem</p>
+            </div>
+          </div>
+
+          <h3><i class="fas fa-rocket"></i> Technology Stack</h3>
+          <p>Enterprise-grade infrastructure built on:</p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 8px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #22c55e;">▸</span> Real-time threat detection engines</li>
+            <li style="padding: 8px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #22c55e;">▸</span> Machine learning models trained on 10M+ threats</li>
+            <li style="padding: 8px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #22c55e;">▸</span> Distributed architecture for 99.99% uptime</li>
+            <li style="padding: 8px 0; padding-left: 20px; position: relative;"><span style="position: absolute; left: 0; color: #22c55e;">▸</span> Zero-knowledge encryption protocols</li>
+          </ul>
+        </div>
+
+        <!-- Impact Tab -->
+        <div id="impact" class="tab-content">
+          <h3><i class="fas fa-chart-pie"></i> Market Impact</h3>
+          <p>Phoenix 28 is transforming how enterprises approach AI security at scale. The platform now protects over 50 billion AI inferences monthly with 95% threat detection accuracy.</p>
+
+          <div class="stat-row">
+            <div class="stat-item">
+              <div class="icon">🌍</div>
+              <div class="number">500+</div>
+              <div class="text">Customers</div>
+            </div>
+            <div class="stat-item">
+              <div class="icon">🛡️</div>
+              <div class="number">50B+</div>
+              <div class="text">Inferences/Month</div>
+            </div>
+            <div class="stat-item">
+              <div class="icon">🎯</div>
+              <div class="number">95%</div>
+              <div class="text">Accuracy</div>
+            </div>
+          </div>
+
+          <h3><i class="fas fa-globe"></i> Global Expansion</h3>
+          <p>This funding enables Phoenix 28 to establish regional operations and expand market presence:</p>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>EMEA Operations:</strong> Dedicated support teams across Europe with local compliance expertise
+            </div>
+            <div class="timeline-item">
+              <strong>APAC Growth:</strong> Regional offices in Singapore and Tokyo for Asia-Pacific customers
+            </div>
+            <div class="timeline-item">
+              <strong>Strategic Partnerships:</strong> Integrations with leading AI platforms and cloud providers
+            </div>
+            <div class="timeline-item">
+              <strong>Industry Leadership:</strong> Education programs and thought leadership initiatives
+            </div>
+          </div>
+
+          <h3><i class="fas fa-lightbulb"></i> Vision for 2026-2027</h3>
+          <p>Phoenix 28 aims to become the standard infrastructure for AI security globally, protecting 1 trillion+ inferences monthly and expanding to 1,000+ enterprise customers.</p>
+        </div>
+
+        <!-- Contact Tab -->
+        <div id="contact" class="tab-content">
+          <h3><i class="fas fa-phone"></i> Media & Press</h3>
+          <div style="display: grid; gap: 20px; margin-top: 20px;">
+            <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2); padding: 20px; border-radius: 12px;">
+              <p style="margin: 0 0 12px 0; color: #22c55e; font-weight: 600; font-size: 16px;">📢 Press Contact</p>
+              <p style="margin: 0; font-weight: 500;">Sarah Johnson</p>
+              <p style="margin: 4px 0; font-size: 14px; opacity: 0.7;">Head of Communications</p>
+              <p style="margin: 12px 0 4px 0; font-weight: 500;">
+                press@phoenix28.tech 
+                <button class="copy-btn" data-copy="press@phoenix28.tech">Copy</button>
+              </p>
+              <p style="margin: 0;">
+                +1 (800) 555-0147 
+                <button class="copy-btn" data-copy="+1 (800) 555-0147">Copy</button>
+              </p>
+            </div>
+
+            <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2); padding: 20px; border-radius: 12px;">
+              <p style="margin: 0 0 12px 0; color: #22c55e; font-weight: 600; font-size: 16px;">📊 Analyst Relations</p>
+              <p style="margin: 0; font-weight: 500;">Michael Chen</p>
+              <p style="margin: 4px 0; font-size: 14px; opacity: 0.7;">Director, Strategic Communications</p>
+              <p style="margin: 12px 0 0 0; font-weight: 500;">
+                analyst@phoenix28.tech 
+                <button class="copy-btn" data-copy="analyst@phoenix28.tech">Copy</button>
+              </p>
+            </div>
+
+            <div style="background: rgba(34, 197, 94, 0.15); border: 2px solid rgba(34, 197, 94, 0.4); padding: 16px; border-radius: 10px;">
+              <p style="margin: 0; font-size: 14px; color: #d0d0d0;">
+                <strong>🚨 Urgent Requests:</strong> For media inquiries outside business hours, call 
+                <span style="color: #22c55e; font-weight: 600;">+1 (800) 555-0199</span>
+                <button class="copy-btn" data-copy="+1 (800) 555-0199" style="margin-left: 8px;">Copy</button>
+              </p>
+            </div>
+          </div>
+
+          <h3><i class="fas fa-link"></i> Resources</h3>
+          <div style="display: grid; gap: 12px; margin-top: 16px;">
+            <button style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 12px 16px; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.3s; width: 100%;">
+              <i class="fas fa-download" style="margin-right: 8px;"></i> Download Media Kit (12 MB)
+            </button>
+            <button style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 12px 16px; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.3s; width: 100%;">
+              <i class="fas fa-user-tie" style="margin-right: 8px;"></i> Executive Photos (8 MB)
+            </button>
+            <button style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 12px 16px; border-radius: 8px; cursor: pointer; text-align: left; transition: all 0.3s; width: 100%;">
+              <i class="fas fa-images" style="margin-right: 8px;"></i> Brand Assets (PNG, SVG, EPS)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('releaseModal');
+    const readReleaseBtn = document.getElementById('readReleaseBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const copyBtns = document.querySelectorAll('.copy-btn');
+
+    // Modal Controls
+    readReleaseBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // Tab Switching
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.getAttribute('data-tab');
+        
+        // Remove active class from all tabs and contents
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        btn.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // Copy to Clipboard
+    copyBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.getAttribute('data-copy');
+        
+        navigator.clipboard.writeText(text).then(() => {
+          btn.classList.add('copied');
+          btn.textContent = '✓ Copied';
+          
+          setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.textContent = 'Copy';
+          }, 2000);
+        });
+      });
+    });
+
+    function navigatePage(event) {
+      // Placeholder for page navigation
+    }
+  </script>
 </body>
 </html>

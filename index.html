@@ -41,6 +41,14 @@
       position: relative;
       color: #e0e0e0;
     }
+    /* Hide scrollbars for all devices */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
     body.light { color: #111; }
     body.light .text-white { color: #111; }
     body.reduce-motion * { animation: none !important; transition: none !important; }
@@ -98,20 +106,6 @@
       vertical-align: middle; margin-left: 4px; animation: blink 1s infinite;
     }
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-    @keyframes pageIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pageOut {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(-15px); }
-    }
-    body.page-exit {
-      animation: pageOut 0.4s ease-in-out forwards;
-    }
-    body.page-enter {
-      animation: pageIn 0.4s ease-in-out forwards;
-    }
     /* cards hover */
     .service-card, .team-card {
       transition: all 0.2s ease;
@@ -237,14 +231,147 @@
     .revealed { opacity: 1; transform: translateY(0); }
     /* stats counter */
     .stat-number { font-family: 'Roboto Mono', monospace; }
-    /* AI assistant panel */
+    /* AI assistant panel - ENHANCED */
     .ai-panel {
-      position: fixed; bottom: 100px; right: 20px; width: 340px; max-width: calc(100% - 40px);
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); border: 1px solid #22c55e;
-      border-radius: 28px; z-index: 200; display: none; flex-direction: column;
-      box-shadow: 0 20px 40px #00000080;
+      position: fixed; bottom: 100px; right: 20px; width: 380px; max-width: calc(100% - 40px);
+      background: linear-gradient(135deg, rgba(8, 10, 15, 0.95), rgba(10, 12, 18, 0.92));
+      backdrop-filter: blur(24px); 
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      border-radius: 20px; z-index: 200; display: none; flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(34,197,94,0.15);
+      height: 480px;
+      overflow: hidden;
     }
-    .ai-panel.open { display: flex; }
+    .ai-panel.open { display: flex; animation: slideUp 0.3s ease-out; }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .ai-panel > div:first-child {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+      background: rgba(34, 197, 94, 0.05);
+    }
+    .ai-panel > div:first-child span {
+      font-weight: 600;
+      font-size: 0.95em;
+      letter-spacing: 0.3px;
+    }
+    #aiMessages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      scroll-behavior: smooth;
+    }
+    #aiMessages::-webkit-scrollbar {
+      width: 6px;
+    }
+    #aiMessages::-webkit-scrollbar-track {
+      background: rgba(34, 197, 94, 0.05);
+      border-radius: 10px;
+    }
+    #aiMessages::-webkit-scrollbar-thumb {
+      background: rgba(34, 197, 94, 0.3);
+      border-radius: 10px;
+    }
+    #aiMessages::-webkit-scrollbar-thumb:hover {
+      background: rgba(34, 197, 94, 0.5);
+    }
+    .ai-panel > div:last-child {
+      display: flex;
+      gap: 6px;
+      padding: 8px;
+      border-top: 1px solid rgba(34, 197, 94, 0.2);
+      background: rgba(0, 0, 0, 0.3);
+    }
+    #aiInput {
+      flex: 1;
+      background: rgba(20, 20, 30, 0.6);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      outline: none;
+      transition: all 0.2s;
+    }
+    #aiInput:focus {
+      border-color: #22c55e;
+      background: rgba(20, 20, 30, 0.8);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+    #aiInput::placeholder {
+      color: rgba(34, 197, 94, 0.5);
+    }
+    #aiSend {
+      background: linear-gradient(135deg, #22c55e, #18a34a);
+      color: black;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85em;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    #aiSend:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    }
+    #aiSend:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    #aiToggle {
+      background: linear-gradient(135deg, #22c55e, #18a34a);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
+      transition: all 0.3s;
+    }
+    #aiToggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5);
+    }
+    /* AI Message Links & Actions */
+    #aiMessages a {
+      color: #22c55e;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.5);
+      padding-bottom: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #aiMessages a:hover {
+      color: #fff;
+      background: rgba(34, 197, 94, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+      border-color: #22c55e;
+    }
+    /* AI Messages styling */
+    #aiMessages strong {
+      color: #22c55e;
+      font-weight: 600;
+    }
+    #aiMessages br { margin: 4px 0; display: block; }
+    /* Loading animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-pulse {
+      animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @media (max-width: 640px) {
+      .ai-panel {
+        bottom: 80px;
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        height: 420px;
+      }
+    }
     /* humanoid video element */
     .humanoid-video {
       width: 100%;
@@ -510,9 +637,9 @@
         </div>
         <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
           <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-black flex items-center justify-center text-4xl">JD</div>
-          <h3 class="text-xl mt-4">Jane Doe</h3>
+          <h3 class="text-xl mt-4">Hassan Mohammed</h3>
           <p class="text-[#22c55e]">CTO, AI research</p>
-          <p class="text-sm my-2">20+ years in deep learning.</p>
+          <p class="text-sm my-2">7+ years in deep learning.</p>
           <div class="flex justify-center gap-3 mt-2">
             <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
             <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
@@ -520,7 +647,7 @@
         </div>
         <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
           <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-black flex items-center justify-center text-4xl">MC</div>
-          <h3 class="text-xl mt-4">Mary Chen</h3>
+          <h3 class="text-xl mt-4">Mary Cheplagat</h3>
           <p class="text-[#22c55e]">Lead Security</p>
           <p class="text-sm my-2">Zero‑day hunter.</p>
           <div class="flex justify-center gap-3 mt-2">
@@ -530,7 +657,7 @@
         </div>
         <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
           <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-orange-500 to-black flex items-center justify-center text-4xl">AK</div>
-          <h3 class="text-xl mt-4">Alex Kim</h3>
+          <h3 class="text-xl mt-4">Felix Mwangi</h3>
           <p class="text-[#22c55e]">Blockchain lead</p>
           <p class="text-sm my-2">DeFi protocols architect.</p>
           <div class="flex justify-center gap-3 mt-2">
@@ -548,10 +675,10 @@
         <div class="ios-26-glass-dark p-8 rounded-3xl">
           <h3 class="text-2xl mb-4">Let's talk</h3>
           <p class="mb-2"><i class="fas fa-envelope text-[#22c55e] mr-2"></i> info@phoenix28.tech</p>
-          <p class="mb-2"><i class="fas fa-phone text-[#22c55e] mr-2"></i> +1 (800) 555-0128</p>
-          <p class="mb-6"><i class="fas fa-map-pin text-[#22c55e] mr-2"></i> San Francisco / Nairobi (remote)</p>
+          <p class="mb-2"><i class="fas fa-phone text-[#22c55e] mr-2"></i> +254 752 953 500 </p>
+          <p class="mb-6"><i class="fas fa-map-pin text-[#22c55e] mr-2"></i> Mwembe Tayari / Mombasa (remote)</p>
           <div class="flex gap-4 text-2xl"><i class="fab fa-github"></i><i class="fab fa-linkedin"></i><i class="fab fa-x-twitter"></i></div>
-          <div class="mt-8 h-32 bg-black/30 rounded-2xl flex items-center justify-center border border-[#22c55e]">[ map placeholder ]</div>
+          <div class="mt-8 h-32 bg-black/30 rounded-2xl flex items-center justify-center border border-[#22c55e]">[ map placeholder  ] <br> {Coming Soon.... }</br></div>
         </div>
         <div class="ios-26-glass-dark p-8 rounded-3xl">
           <form id="contactForm" class="space-y-4">
@@ -567,21 +694,119 @@
     </section>
   </main>
 
-  <!-- Footer (keep as is but remove mobile menu related) -->
-  <footer class="ios-26-glass-dark mt-20 py-10 px-6 relative z-20">
-    <div class="container mx-auto grid md:grid-cols-4 gap-8 text-sm">
-      <div><span class="text-2xl font-mono">◈ Phoenix 28 Tech</span><p class="mt-2 opacity-70">AI, cloud & security that rise from challenges.</p><div class="flex gap-4 mt-4 text-2xl"><i class="fab fa-github hover:text-[#22c55e]"></i><i class="fab fa-linkedin hover:text-[#22c55e]"></i><i class="fab fa-x-twitter hover:text-[#22c55e]"></i></div></div>
-      <div><h4 class="font-bold text-[#22c55e] mb-2">Company</h4><ul class="space-y-1 opacity-80"><li><a href="#about">About</a></li><li><a href="#team">Team</a></li><li><a href="#careers">Careers</a> <span class="text-[#22c55e] text-xs">(coming)</span></li><li><a href="press.html" onclick="navigatePage(event)">Press</a></li></ul></div>
-      <div><h4 class="font-bold text-[#22c55e] mb-2">Resources</h4><ul class="space-y-1 opacity-80"><li><a href="blog.html" onclick="navigatePage(event)">Blog</a></li><li><a href="whitepapers.html" onclick="navigatePage(event)">Whitepapers</a></li><li><a href="documentation.html" onclick="navigatePage(event)">Documentation</a></li><li><a href="support.html" onclick="navigatePage(event)">Support</a></li></ul></div>
-      <div><h4 class="font-bold text-[#22c55e] mb-2">Newsletter</h4><p class="opacity-70 text-xs mb-2">Get latest updates on AI & security.</p><div class="flex"><input type="email" placeholder="your@email.com" class="bg-black/40 border border-[#22c55e] p-2 rounded-l-xl w-full"><button class="bg-[#22c55e] text-black px-4 rounded-r-xl"><i class="fas fa-paper-plane"></i></button></div></div>
+  <!-- Footer - Modern Redesigned Layout -->
+  <footer class="ios-26-glass-dark mt-20 py-16 px-6 relative z-20 overflow-hidden">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-[#22c55e]/5 rounded-full blur-3xl -z-10"></div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-[#22c55e]/5 rounded-full blur-3xl -z-10"></div>
+    
+    <div class="container mx-auto">
+      <!-- Main Content Grid -->
+      <div class="grid md:grid-cols-3 gap-12 mb-12">
+        
+        <!-- Brand Section -->
+        <div class="group">
+          <div class="bg-gradient-to-br from-[#22c55e]/10 to-transparent border border-[#22c55e]/30 rounded-2xl p-8 hover:border-[#22c55e]/60 transition-all duration-300 h-full">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="text-3xl font-mono text-[#22c55e]">◈</span>
+              <span class="text-xl font-bold">Phoenix 28 Tech</span>
+            </div>
+            <p class="opacity-70 text-sm leading-relaxed mb-6">AI, cloud & security that rise from challenges. Innovation meets excellence.</p>
+            <div class="flex gap-4 text-2xl">
+              <a href="#" class="p-2 rounded-lg hover:bg-[#22c55e]/20 transition-colors duration-300"><i class="fab fa-github hover:text-[#22c55e]"></i></a>
+              <a href="#" class="p-2 rounded-lg hover:bg-[#22c55e]/20 transition-colors duration-300"><i class="fab fa-linkedin hover:text-[#22c55e]"></i></a>
+              <a href="#" class="p-2 rounded-lg hover:bg-[#22c55e]/20 transition-colors duration-300"><i class="fab fa-x-twitter hover:text-[#22c55e]"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- About & Company Section -->
+        <div class="group">
+          <div class="bg-gradient-to-br from-[#22c55e]/10 to-transparent border border-[#22c55e]/30 rounded-2xl p-8 hover:border-[#22c55e]/60 transition-all duration-300 h-full">
+            <h3 class="text-lg font-bold text-[#22c55e] mb-6 flex items-center gap-2">
+              <i class="fas fa-building text-xl"></i> About & Company
+            </h3>
+            <ul class="space-y-3">
+              <li><a href="#about" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> About Us
+              </a></li>
+              <li><a href="#team" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Meet Our Team
+              </a></li>
+              <li><a href="#careers" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Careers <span class="text-[#22c55e] text-xs bg-[#22c55e]/20 px-2 py-1 rounded">(coming)</span>
+              </a></li>
+              <li><a href="press.html" onclick="navigatePage(event)" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Press & Media
+              </a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="group">
+          <div class="bg-gradient-to-br from-[#22c55e]/10 to-transparent border border-[#22c55e]/30 rounded-2xl p-8 hover:border-[#22c55e]/60 transition-all duration-300 h-full">
+            <h3 class="text-lg font-bold text-[#22c55e] mb-6 flex items-center gap-2">
+              <i class="fas fa-book text-xl"></i> Resources
+            </h3>
+            <ul class="space-y-3">
+              <li><a href="blog.html" onclick="navigatePage(event)" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Blog & Insights
+              </a></li>
+              <li><a href="whitepapers.html" onclick="navigatePage(event)" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Whitepapers
+              </a></li>
+              <li><a href="documentation.html" onclick="navigatePage(event)" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Documentation
+              </a></li>
+              <li><a href="support.html" onclick="navigatePage(event)" class="opacity-70 hover:opacity-100 hover:text-[#22c55e] transition-all duration-300 flex items-center gap-2">
+                <span class="text-[#22c55e]">›</span> Support Center
+              </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Newsletter Section -->
+      <div class="bg-gradient-to-r from-[#22c55e]/15 via-[#22c55e]/5 to-[#22c55e]/15 border border-[#22c55e]/40 rounded-2xl p-8 mb-8 hover:border-[#22c55e]/60 transition-all duration-300">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+              <i class="fas fa-envelope text-[#22c55e]"></i> Stay Updated
+            </h3>
+            <p class="opacity-70 text-sm">Get the latest insights on AI, cloud security, and innovation delivered to your inbox.</p>
+          </div>
+          <div class="flex gap-2">
+            <input type="email" placeholder="your@email.com" class="flex-1 bg-black/40 border border-[#22c55e] p-3 rounded-xl focus:bg-black/60 focus:border-[#22c55e] focus:outline-none transition-all duration-300">
+            <button class="bg-[#22c55e] hover:bg-[#22c55e]/90 text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="border-t border-[#22c55e]/30 pt-8">
+        <div class="grid md:grid-cols-2 gap-8 items-center mb-6">
+          <div class="text-xs opacity-60">
+            <p>© 2026 Phoenix 28 Tech. All rights reserved.</p>
+            <p class="mt-2">Meet the <a href="#" class="text-[#22c55e] hover:underline transition-colors duration-300">founder</a> behind the vision.</p>
+          </div>
+          
+          <div class="flex gap-2 justify-end flex-wrap">
+            <button id="fontDecrease" class="border border-[#22c55e]/40 hover:border-[#22c55e] p-2 rounded-lg hover:bg-[#22c55e]/10 transition-all duration-300" title="Decrease font size"><i class="fas fa-minus text-sm"></i></button>
+            <button id="fontIncrease" class="border border-[#22c55e]/40 hover:border-[#22c55e] p-2 rounded-lg hover:bg-[#22c55e]/10 transition-all duration-300" title="Increase font size"><i class="fas fa-plus text-sm"></i></button>
+            <button id="hcToggle" class="border border-[#22c55e]/40 hover:border-[#22c55e] p-2 rounded-lg hover:bg-[#22c55e]/10 transition-all duration-300" title="High contrast mode"><i class="fas fa-adjust text-sm"></i></button>
+            <button id="rmToggle" class="border border-[#22c55e]/40 hover:border-[#22c55e] p-2 rounded-lg hover:bg-[#22c55e]/10 transition-all duration-300" title="Reading mode"><i class="fas fa-eye-slash text-sm"></i></button>
+          </div>
+        </div>
+
+        <!-- Typewriter Footer -->
+        <div class="font-mono text-xs text-center opacity-50 my-4"><span id="typewriterFooter"></span><span class="terminal-cursor"></span></div>
+      </div>
     </div>
-    <div class="border-t border-[#22c55e33] mt-8 pt-4 text-center text-xs opacity-60 flex flex-wrap justify-between items-center">
-      <span>© 2026 Phoenix 28 Tech. All rights reserved. Meet the <a href="#" class="underline hover:text-[#22c55e]">founder</a>.</span>
-      <div class="flex gap-4"><button id="fontDecrease" class="border p-2 rounded-full"><i class="fas fa-minus"></i></button><button id="fontIncrease" class="border p-2 rounded-full"><i class="fas fa-plus"></i></button><button id="hcToggle" class="border p-2 rounded-full"><i class="fas fa-adjust"></i></button><button id="rmToggle" class="border p-2 rounded-full"><i class="fas fa-eye-slash"></i></button></div>
-    </div>
-    <div class="font-mono text-sm my-4 text-center"><span id="typewriterFooter"></span><span class="terminal-cursor"></span></div>
-    <button id="backToTop" aria-label="Back to top" class="bg-[#22c55e] text-black p-3 rounded-full fixed bottom-20 right-4 z-50"><i class="fas fa-arrow-up"></i></button>
-    <button id="installPWA" class="border border-[#22c55e] px-4 py-1 rounded-full text-sm mt-2 hidden mx-auto block">Install App</button>
+
+    <!-- Action Buttons -->
+    <button id="backToTop" aria-label="Back to top" class="bg-[#22c55e] hover:bg-[#22c55e]/90 text-black p-3 rounded-full fixed bottom-20 right-4 z-50 transition-all duration-300 transform hover:scale-110 active:scale-95 shadow-lg"><i class="fas fa-arrow-up"></i></button>
+    <button id="installPWA" class="border border-[#22c55e] hover:bg-[#22c55e]/10 px-4 py-2 rounded-full text-sm mt-4 hidden mx-auto block transition-all duration-300">Install App</button>
   </footer>
 
   <!-- AI Assistant Panel (modern icon, improved interactions) -->
@@ -699,75 +924,377 @@
       const aiInput = document.getElementById('aiInput');
       const aiSend = document.getElementById('aiSend');
 
-      const knowledge = {
-        greetings: ['hello', 'hi', 'hey', 'greetings', 'yo'],
-        services: ['service', 'offer', 'provide', 'do you', 'what can you'],
-        team: ['team', 'member', 'who works', 'employee', 'founder', 'pius', 'jane', 'mary', 'alex'],
-        projects: ['project', 'case study', 'work', 'portfolio', 'aegis', 'nimbus', 'chainvault'],
-        demos: ['demo', 'try', 'playground', 'interactive', 'terminal'],
-        contact: ['contact', 'email', 'phone', 'reach', 'address'],
-        pricing: ['price', 'cost', 'pricing', 'plan'],
-        security: ['security', 'hack', 'cyber', 'protection', 'encryption'],
-        joke: ['joke', 'funny', 'laugh']
+      // ========== ADVANCED AI ASSISTANT (GPT-5.2 Style) ==========
+      // Comprehensive Knowledge Base (extracted from all pages)
+      const knowledgeBase = {
+        company: {
+          name: 'Phoenix 28 Tech',
+          year: 2021,
+          tagline: 'AI, cloud & security that rise from challenges',
+          mission: 'Founded by Pius Maina, Phoenix 28 Tech delivers next-gen tech with integrity. We merge AI, zero-trust security, and elegant engineering.',
+          location: 'Mwembe Tayari / Mombasa (remote)',
+          website: 'phoenix28.tech',
+          email: 'info@phoenix28.tech',
+          phone: '+254 752 953 500',
+          stats: {
+            yearsInBusiness: 5,
+            projectsCompleted: 47,
+            satisfaction: '100%',
+            countriesServed: 12
+          }
+        },
+        services: {
+          ai_ml: {
+            name: 'AI & Machine Learning',
+            description: 'Custom models, NLP, predictive analytics, fraud detection',
+            expertise: 90,
+            examples: ['Aegis AI for fraud detection', 'Real-time inference engines']
+          },
+          cloud_security: {
+            name: 'Cloud Security',
+            description: 'Zero-trust architecture, threat monitoring, compliance',
+            expertise: 95,
+            examples: ['Nimbus Secure mesh', 'Multi-cloud protection']
+          },
+          pentesting: {
+            name: 'Penetration Testing',
+            description: 'Ethical hacking, vulnerability assessments, red teaming',
+            expertise: 88,
+            examples: ['Comprehensive security audits', 'Zero-day hunting']
+          },
+          blockchain: {
+            name: 'Blockchain Solutions',
+            description: 'Smart contracts, DeFi, identity, healthcare ledgers',
+            expertise: 82,
+            examples: ['ChainVault healthcare platform', 'DeFi protocols']
+          }
+        },
+        projects: {
+          aegis_ai: {
+            name: 'Aegis AI',
+            tagline: 'Enterprise-Grade Fraud Detection',
+            description: 'Real-time fraud detection for fintech using PyTorch',
+            tech: ['PyTorch', 'Kafka', 'AWS', 'TensorFlow'],
+            impact: '40% performance improvement, Reduced fraud by 99.8%',
+            industry: 'Financial Services'
+          },
+          nimbus_secure: {
+            name: 'Nimbus Secure',
+            tagline: 'Zero-Trust Cloud Mesh',
+            description: 'Kubernetes-native zero-trust architecture for multi-cloud',
+            tech: ['Kubernetes', 'Istio', 'AWS', 'Azure', 'GCP'],
+            impact: '100% compliance, Zero incidents in production',
+            industry: 'Enterprise Security'
+          },
+          chainvault: {
+            name: 'ChainVault',
+            tagline: 'Private Blockchain for Healthcare',
+            description: 'HIPAA-compliant blockchain for healthcare data sharing',
+            tech: ['Hyperledger', 'Solidity', 'Node.js'],
+            impact: '10k TPS, Immutable audit trail',
+            industry: 'Healthcare/Life Sciences'
+          }
+        },
+        team: {
+          pius: {
+            name: 'Pius Maina',
+            role: 'CEO & Founder',
+            bio: 'Visionary architect, ex-SpaceX security. Founded Phoenix 28 with a mission to build unhackable AI systems.',
+            expertise: ['AI Strategy', 'Security', 'Blockchain']
+          },
+          hassan: {
+            name: 'Hassan Mohammed',
+            role: 'CTO, AI Research',
+            bio: '7+ years in deep learning. Expert in neural networks, reinforcement learning, and large language models.',
+            expertise: ['Deep Learning', 'NLP', 'ML Ops']
+          },
+          mary: {
+            name: 'Mary Cheplagat',
+            role: 'Lead Security',
+            bio: 'Zero-day hunter with expertise in offensive and defensive security. Certified ethical hacker.',
+            expertise: ['Penetration Testing', 'Zero-Trust', 'Threat Modeling']
+          },
+          felix: {
+            name: 'Felix Mwangi',
+            role: 'Blockchain Lead',
+            bio: 'DeFi protocols architect. Expert in smart contracts, consensus mechanisms, and distributed systems.',
+            expertise: ['Blockchain', 'DeFi', 'Smart Contracts']
+          }
+        },
+        pages: {
+          documentation: {
+            title: 'Documentation',
+            description: 'Comprehensive guides for all Phoenix 28 products',
+            sections: ['Getting Started', 'API Reference', 'SDK Documentation', 'Deployment Guides'],
+            url: 'documentation.html',
+            features: ['Code examples', 'Best practices', 'Troubleshooting', 'Architecture diagrams']
+          },
+          whitepapers: {
+            title: 'Whitepapers & Research',
+            description: 'In-depth technical research and architecture guides',
+            url: 'whitepapers.html',
+            papers: [
+              'Zero-Trust Architecture for Distributed AI Systems (v2.0, May 2026)',
+              'Post-Quantum Cryptography in Blockchain',
+              'LLM Security: Red Teaming Guide',
+              'Multi-Cloud Network Security Mesh',
+              'AI-Driven Threat Detection',
+              'Secure Enclaves for Confidential Computing',
+              'DeFi Protocol Security Audit Standard'
+            ],
+            pdfs: true
+          },
+          blog: {
+            title: 'Blog & Insights',
+            description: 'Latest news, tutorials, and industry insights',
+            url: 'blog.html'
+          },
+          support: {
+            title: 'Support Center',
+            description: '24/7 customer support and help resources',
+            url: 'support.html',
+            support_email: 'support@phoenix28.tech',
+            emergency_line: '+1 (800) 555-0199'
+          },
+          press: {
+            title: 'Press & Media',
+            description: 'Press releases, media kit, and news coverage',
+            url: 'press.html'
+          }
+        }
       };
 
-      const responses = {
-        greetings: ['Hello! How can I assist you today? 😊', 'Hi there! 👋 Ask me anything about Phoenix 28.', 'Hey! Ready to explore?'],
-        services: 'We offer AI/ML, cloud security, pen-testing, blockchain, and full-stack engineering. Which interests you? 🔒',
-        team: 'Core team: Pius Maina (CEO), Jane Doe (CTO AI), Mary Chen (Lead Security), Alex Kim (Blockchain). All experts! 👥',
-        projects: 'Featured: Aegis AI (fraud), Nimbus Secure (zero-trust), ChainVault (healthcare). Check Projects section! 🚀',
-        demos: 'We have live demos! Try the interactive terminal or click demo buttons above. Type "aegis", "nimbus", or "chainvault" here. 🎮',
-        contact: 'Reach us at info@phoenix28.tech or +1 (800) 555-0128. 📧',
-        pricing: 'Custom pricing based on needs. Please contact us for a quote. 💼',
-        security: 'Zero-trust, pen-testing, threat monitoring – security is our core! 🛡️',
-        joke: 'Why did the AI go to therapy? It had too many neural issues! 😂',
-        default: "I'm not sure. Try asking about services, team, demos, or tell me a joke! 😅",
-      };
+      // Conversation History
+      let conversationHistory = [];
 
-      function getAIResponse(userMsg) {
-        const msg = userMsg.toLowerCase();
-        if (knowledge.greetings.some(g => msg.includes(g))) return responses.greetings[Math.floor(Math.random() * responses.greetings.length)];
-        if (knowledge.services.some(s => msg.includes(s))) return responses.services;
-        if (knowledge.team.some(t => msg.includes(t))) {
-          if (msg.includes('pius')) return "Pius Maina is our CEO, ex‑SpaceX security. Visionary! 🔥";
-          if (msg.includes('jane')) return "Jane Doe, CTO AI research, 20+ years deep learning. 🤖";
-          if (msg.includes('mary')) return "Mary Chen, Lead Security, zero‑day hunter. 🛡️";
-          if (msg.includes('alex')) return "Alex Kim, Blockchain lead, DeFi architect. ⛓️";
-          return responses.team;
+      // Response Generator with Human Psychology & Reasoning
+      class PhoenixAI {
+        analyzeIntent(userMsg) {
+          const msg = userMsg.toLowerCase();
+          const intents = {
+            greeting: /hello|hi|hey|greetings|yo|sup/i.test(msg),
+            service_inquiry: /service|offer|provide|what can|capability|can you/i.test(msg),
+            team_question: /team|member|founder|cto|leader|pius|hassan|mary|felix|employee/i.test(msg),
+            project_inquiry: /project|case study|work|portfolio|aegis|nimbus|chainvault/i.test(msg),
+            documentation: /doc|guide|how to|tutorial|setup|install|integrate|example|code/i.test(msg),
+            whitepapers: /paper|research|whitepaper|pdf|article|study|download/i.test(msg),
+            pricing: /price|cost|plan|paid|free|billing/i.test(msg),
+            support: /support|help|issue|problem|contact|email|phone|reach/i.test(msg),
+            security: /security|encrypt|hack|cyber|protection|vulner|threat/i.test(msg),
+            demo: /demo|try|test|playground|interactive|sandbox/i.test(msg),
+            blog_related: /blog|news|update|article|insight|trend/i.test(msg),
+            joke: /joke|funny|comedy|laugh|haha/i.test(msg)
+          };
+          return intents;
         }
-        if (knowledge.projects.some(p => msg.includes(p))) {
-          if (msg.includes('aegis')) return "Aegis AI: fraud detection, PyTorch/Kafka/AWS. 40% gain. 💳";
-          if (msg.includes('nimbus')) return "Nimbus Secure: zero-trust cloud, K8s/Istio. 100% compliant. ☁️";
-          if (msg.includes('chainvault')) return "ChainVault: private healthcare blockchain, Hyperledger. 10k TPS. 🏥";
-          return responses.projects;
+
+        searchKnowledge(userMsg, intent) {
+          const results = { matched_topics: [], relevant_content: [], suggested_links: [] };
+
+          if (intent.greeting) results.matched_topics.push('greeting');
+          if (intent.service_inquiry) {
+            results.matched_topics.push('services');
+            results.relevant_content.push(knowledgeBase.services);
+          }
+          if (intent.team_question) {
+            results.matched_topics.push('team');
+            if (userMsg.toLowerCase().includes('pius')) results.relevant_content.push(knowledgeBase.team.pius);
+            else if (userMsg.toLowerCase().includes('hassan')) results.relevant_content.push(knowledgeBase.team.hassan);
+            else if (userMsg.toLowerCase().includes('mary')) results.relevant_content.push(knowledgeBase.team.mary);
+            else if (userMsg.toLowerCase().includes('felix')) results.relevant_content.push(knowledgeBase.team.felix);
+            else results.relevant_content.push(knowledgeBase.team);
+          }
+          if (intent.project_inquiry) {
+            results.matched_topics.push('projects');
+            if (userMsg.toLowerCase().includes('aegis')) results.relevant_content.push(knowledgeBase.projects.aegis_ai);
+            else if (userMsg.toLowerCase().includes('nimbus')) results.relevant_content.push(knowledgeBase.projects.nimbus_secure);
+            else if (userMsg.toLowerCase().includes('chainvault')) results.relevant_content.push(knowledgeBase.projects.chainvault);
+            else results.relevant_content.push(knowledgeBase.projects);
+          }
+          if (intent.documentation || intent.demo) {
+            results.suggested_links.push({ text: '📚 Documentation', url: 'documentation.html' });
+          }
+          if (intent.whitepapers) {
+            results.suggested_links.push({ text: '📄 Whitepapers (PDFs)', url: 'whitepapers.html' });
+            results.matched_topics.push('whitepapers');
+          }
+          if (intent.support || intent.security) {
+            results.suggested_links.push({ text: '📞 Support', url: 'support.html' });
+          }
+          if (intent.blog_related) {
+            results.suggested_links.push({ text: '📰 Blog', url: 'blog.html' });
+          }
+          return results;
         }
-        if (knowledge.demos.some(d => msg.includes(d))) return responses.demos;
-        if (knowledge.contact.some(c => msg.includes(c))) return responses.contact;
-        if (knowledge.pricing.some(p => msg.includes(p))) return responses.pricing;
-        if (knowledge.security.some(s => msg.includes(s))) return responses.security;
-        if (knowledge.joke.some(j => msg.includes(j))) return responses.joke;
-        return responses.default;
+
+        generateResponse(userMsg, intent, searchResults) {
+          const emojis = ['✨', '🚀', '🔒', '💡', '🎯', '⚡', '🏆'];
+          const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+          if (intent.greeting) {
+            return `Hello there! 👋 I'm Phoenix AI, your intelligent assistant. I can help you explore our AI, security, and blockchain solutions. What interests you? ${emoji}`;
+          }
+
+          if (intent.service_inquiry) {
+            let response = `We offer 4 core services:\n\n`;
+            response += `🧠 **AI & Machine Learning** - Custom models, NLP, fraud detection (Aegis AI)\n`;
+            response += `🛡️ **Cloud Security** - Zero-trust, threat monitoring (Nimbus Secure)\n`;
+            response += `🔍 **Penetration Testing** - Ethical hacking, vulnerability assessments\n`;
+            response += `⛓️ **Blockchain Solutions** - Smart contracts, DeFi, healthcare (ChainVault)\n\n`;
+            response += `Which service interests you most?`;
+            return response;
+          }
+
+          if (intent.team_question) {
+            let response = `Our expert team:\n\n`;
+            response += `👨‍💼 **Pius Maina** (CEO) - Ex-SpaceX security architect\n`;
+            response += `🤖 **Hassan Mohammed** (CTO) - 7+ years in deep learning\n`;
+            response += `🛡️ **Mary Cheplagat** (Lead Security) - Zero-day expert\n`;
+            response += `⛓️ **Felix Mwangi** (Blockchain) - DeFi architect\n\n`;
+            response += `Ask about any team member or want to connect?`;
+            return response;
+          }
+
+          if (intent.project_inquiry) {
+            let response = `Our flagship projects:\n\n`;
+            response += `💳 **Aegis AI** - Fraud detection. 40% better, 99.8% accuracy\n`;
+            response += `☁️ **Nimbus Secure** - Zero-trust mesh. 100% compliance\n`;
+            response += `🏥 **ChainVault** - Healthcare blockchain. HIPAA-compliant, 10k TPS\n\n`;
+            response += `Want details on a specific project?`;
+            return response;
+          }
+
+          if (intent.documentation) {
+            return `📚 **Documentation** has everything:\n\n✅ Quick Start (5 min setup)\n✅ SDK Refs (JS, Python, Go, Rust)\n✅ API Docs (endpoints, auth)\n✅ Deploy Guides (AWS, Azure, GCP)\n✅ Best practices & examples\n\n→ Open documentation →`;
+          }
+
+          if (intent.whitepapers) {
+            return `📄 **Research Papers** (downloadable PDFs):\n\n• Zero-Trust Architecture for AI (v2.0)\n• Post-Quantum Cryptography\n• LLM Security Red Teaming\n• Multi-Cloud Security Mesh\n• AI-Driven Threat Detection\n• Secure Enclaves\n• DeFi Security Standards\n\n→ Download PDFs →`;
+          }
+
+          if (intent.support) {
+            return `📞 **Support & Contact**\n\n✉️ Email: support@phoenix28.tech (2h response)\n🚨 Emergency: +1 (800) 555-0199 (24/7)\n💬 Live Chat: Mon-Fri, 9am-8pm EST\n\n→ Open Support →`;
+          }
+
+          if (intent.security) {
+            return `🔐 **Security Focus**\n\n✓ Zero-trust architecture\n✓ Threat detection with AI/ML\n✓ Penetration testing\n✓ Post-quantum crypto\n✓ HIPAA/SOC2 compliant\n\nWant details on a specific area?`;
+          }
+
+          if (intent.demo) {
+            return `🎮 **Try Interactive Demos**\n\n1️⃣ Aegis AI - Test fraud detection\n2️⃣ Nimbus Secure - Explore zero-trust\n3️⃣ ChainVault - Browse blockchain\n\nUse the terminal: aegis, nimbus, chainvault`;
+          }
+
+          if (intent.pricing) {
+            return `💼 **Custom Pricing**\n\nWe offer tailored solutions based on:\n• Use case & scope\n• Scale & deployment\n• SLA requirements\n• Team support\n\nBook consultation: info@phoenix28.tech`;
+          }
+
+          if (intent.joke) {
+            const jokes = [
+              `Why did the AI go to therapy? Too many neural issues! 😂`,
+              `A SQL query walks into a bar, asks two tables: "Can I join you?" 🍺`,
+              `How many ML engineers change a lightbulb? None, that's hardware! 💡`,
+              `Why do programmers prefer dark mode? Light attracts bugs! 🐛`
+            ];
+            return jokes[Math.floor(Math.random() * jokes.length)];
+          }
+
+          let response = `That's interesting! ${emoji}\n\nI can help with:\n`;
+          response += `• 🛠️ Service details\n• 👥 Team bios\n• 💼 Project info\n• 📚 Documentation\n• 📄 Whitepapers (PDF)\n• 📞 Support\n\nWhat would you like to explore?`;
+          return response;
+        }
+
+        formatResponse(content, searchResults) {
+          let html = `<div style="line-height: 1.6; font-size: 0.95em;">`;
+          html += content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong style="color: #22c55e;">$1</strong>');
+          
+          if (searchResults.suggested_links && searchResults.suggested_links.length > 0) {
+            html += `<br><br><strong style="color: #22c55e; font-size: 0.9em;">Quick Access:</strong><br>`;
+            searchResults.suggested_links.forEach(link => {
+              html += `<a href="${link.url}" style="color: #22c55e; text-decoration: underline; cursor: pointer; font-size: 0.9em;" onclick="window.navigatePage && window.navigatePage({target:{href:'${link.url}'}}); return false;">${link.text}</a><br>`;
+            });
+          }
+          html += `</div>`;
+          return html;
+        }
+
+        async getAnswer(userMsg) {
+          const intent = this.analyzeIntent(userMsg);
+          const searchResults = this.searchKnowledge(userMsg, intent);
+          const response = this.generateResponse(userMsg, intent, searchResults);
+          const formatted = this.formatResponse(response, searchResults);
+          return formatted;
+        }
       }
 
-      function addMessage(sender, text) {
+      const aiAssistant = new PhoenixAI();
+
+      // Display thinking/reasoning
+      function displayThinking() {
+        const thinkingMessages = [
+          '✨ Analyzing your query...',
+          '🔍 Searching knowledge base...',
+          '⚙️ Processing context...',
+          '💭 Evaluating response...'
+        ];
         const msg = document.createElement('div');
-        msg.className = sender === 'user' ? 'text-right text-white mb-2' : 'text-[#22c55e] mb-2';
-        msg.innerText = (sender === 'user' ? 'You: ' : 'AI: ') + text;
+        msg.className = 'text-gray-500 text-xs italic mb-2';
+        msg.innerHTML = `<span class="inline-flex items-center"><span class="animate-pulse">${thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)]}</span></span>`;
         aiMessages.appendChild(msg);
         aiMessages.scrollTop = aiMessages.scrollHeight;
+      }
+
+      // Enhanced message display
+      function addMessage(sender, html_content, isHTML = false) {
+        const msg = document.createElement('div');
+        if (sender === 'user') {
+          msg.className = 'text-right text-white mb-3 text-sm';
+          msg.innerHTML = `<span style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.1)); padding: 10px 14px; border-radius: 12px; display: inline-block; max-width: 90%;">You: ${html_content}</span>`;
+        } else {
+          msg.className = 'text-[#22c55e] mb-3 text-sm leading-relaxed';
+          msg.innerHTML = html_content;
+        }
+        aiMessages.appendChild(msg);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+      }
+
+      // Send message with thinking display
+      async function sendAIMessage() {
+        const q = aiInput.value.trim();
+        if (!q) return;
+        
+        addMessage('user', q);
+        aiInput.value = '';
+        aiInput.disabled = true;
+        aiSend.disabled = true;
+
+        displayThinking();
+        const reply = await aiAssistant.getAnswer(q);
+        
+        await new Promise(resolve => setTimeout(resolve, 600));
+        
+        conversationHistory.push({ role: 'user', content: q });
+        conversationHistory.push({ role: 'assistant', content: reply });
+        addMessage('ai', reply, true);
+        
+        aiInput.disabled = false;
+        aiSend.disabled = false;
+        aiInput.focus();
       }
 
       aiSend.addEventListener('click', sendAIMessage);
       aiInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAIMessage(); });
 
-      function sendAIMessage() {
-        const q = aiInput.value.trim();
-        if (!q) return;
-        addMessage('user', q);
-        const reply = getAIResponse(q);
-        setTimeout(() => addMessage('ai', reply), 400);
-        aiInput.value = '';
-      }
+      // ========== PAGE NAVIGATION FUNCTION ==========
+      window.navigatePage = function(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        const href = event.target.href || event.currentTarget.getAttribute('href') || event.target.getAttribute('href');
+        if (href) {
+          document.body.classList.add('page-exit');
+          setTimeout(() => {
+            window.location.href = href;
+          }, 300);
+        }
+      };
 
       // ------ Contact form emailjs ------
       const form = document.getElementById('contactForm');
@@ -916,17 +1443,6 @@
       window.addEventListener('load', adjustMainPadding);
       window.addEventListener('resize', adjustMainPadding);
     })();
-    
-    // Smooth page navigation
-    function navigatePage(event) {
-      event.preventDefault();
-      const href = event.currentTarget.href;
-      document.body.classList.add('page-exit');
-      setTimeout(() => {
-        window.location.href = href;
-      }, 400);
-    }
-    document.body.classList.add('page-enter');
   </script>
   <!-- fake service worker registration -->
   <script> if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); } </script>

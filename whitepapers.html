@@ -35,6 +35,12 @@
       transform: translateY(-5px);
       box-shadow: 0 0 30px #22c55e;
     }
+    nav a {
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      text-shadow: 0 0 10px #22c55e;
+    }
     .scanlines {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,255,0,0.02) 2px, transparent 3px);
@@ -90,6 +96,25 @@
     .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
     .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
     .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+    
+    /* Hide scrollbars for all devices */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Hide modal scrollbar */
+    #paperModalContent {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      overflow-y: scroll;
+    }
+    #paperModalContent::-webkit-scrollbar {
+      display: none;
+    }
   </style>
 </head>
 <body class="overflow-x-hidden">
@@ -104,9 +129,9 @@
           <span class="ml-2">Phoenix 28</span>
         </span>
       </a>
-      <nav class="flex gap-6 font-mono">
-        <a href="index.html" class="hover:text-[#22c55e] transition-colors" onclick="navigatePage(event)">← Back to Home</a>
-      </nav>
+      <a href="index.html" onclick="navigatePage(event)" class="hidden md:block border border-[#22c55e] text-[#22c55e] px-6 py-2 rounded-full font-bold hover:bg-[#22c55e] hover:text-black transition">
+        <i class="fas fa-arrow-left mr-2"></i>Back Home
+      </a>
     </div>
   </header>
 
@@ -124,7 +149,7 @@
       <p class="mb-6 max-w-3xl opacity-80">A comprehensive framework for securing AI pipelines across hybrid cloud environments. Includes implementation patterns, threat models, and case studies from Fortune 500 deployments.</p>
       <div class="flex flex-wrap gap-4">
         <button class="bg-[#22c55e] text-black px-8 py-3 rounded-full font-bold flex items-center gap-2"><i class="fas fa-download"></i> Download PDF (2.4 MB)</button>
-        <button class="border border-[#22c55e] px-8 py-3 rounded-full text-[#22c55e]">Read Abstract</button>
+        <button onclick="openWhitepaperModal(0, event)" class="border border-[#22c55e] px-8 py-3 rounded-full text-[#22c55e] cursor-pointer hover:bg-[#22c55e] hover:text-black transition">Read Abstract</button>
       </div>
       <div class="flex gap-6 mt-6 text-sm opacity-60">
         <span><i class="far fa-calendar mr-2"></i> May 2026</span>
@@ -144,7 +169,7 @@
           <span class="text-xs opacity-50">March 2026 · 38 pages</span>
           <span class="text-[#22c55e] text-sm">v1.2</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(1, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
 
       <!-- Paper 2 -->
@@ -156,7 +181,7 @@
           <span class="text-xs opacity-50">February 2026 · 52 pages</span>
           <span class="text-[#22c55e] text-sm">v2.0</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(2, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
 
       <!-- Paper 3 -->
@@ -168,7 +193,7 @@
           <span class="text-xs opacity-50">January 2026 · 46 pages</span>
           <span class="text-[#22c55e] text-sm">v1.5</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(3, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
 
       <!-- Paper 4 -->
@@ -180,7 +205,7 @@
           <span class="text-xs opacity-50">December 2025 · 34 pages</span>
           <span class="text-[#22c55e] text-sm">v3.1</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(4, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
 
       <!-- Paper 5 -->
@@ -192,7 +217,7 @@
           <span class="text-xs opacity-50">November 2025 · 28 pages</span>
           <span class="text-[#22c55e] text-sm">v1.0</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(5, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
 
       <!-- Paper 6 -->
@@ -204,7 +229,7 @@
           <span class="text-xs opacity-50">October 2025 · 62 pages</span>
           <span class="text-[#22c55e] text-sm">v2.3</span>
         </div>
-        <button class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition">Download</button>
+        <button onclick="openWhitepaperModal(6, event)" class="w-full border border-[#22c55e] py-2 rounded-full text-[#22c55e] hover:bg-[#22c55e] hover:text-black transition cursor-pointer">Read Abstract</button>
       </div>
     </div>
 
@@ -221,23 +246,122 @@
     </div>
   </main>
 
-  <footer class="ios-26-glass-dark mt-10 py-8 relative z-20">
-    <div class="container mx-auto text-center">
-      <p>© 2026 Phoenix 28 Tech. <a href="index.html" class="text-[#22c55e] hover:underline" onclick="navigatePage(event)">Back to Home</a></p>
-    </div>
-  </footer>
+  <!-- Whitepaper Modal -->
+  <div id="whitepaperModal" class="fixed inset-0 z-40 opacity-0 pointer-events-none transition-opacity duration-300" style="background: rgba(0,0,0,0.7);">
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="ios-26-glass-dark rounded-3xl w-full h-full max-h-[90vh] md:max-w-4xl md:max-h-[85vh] overflow-y-auto relative" id="paperModalContent">
+        <!-- Close Button (Desktop) -->
+        <button id="closePaperModal" class="absolute top-6 right-6 z-50 text-[#22c55e] hover:text-white transition md:bg-black/40 md:border md:border-[#22c55e] md:p-2 md:rounded-full">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
 
-  <script>
-    function navigatePage(event) {
-      event.preventDefault();
-      const href = event.currentTarget.href;
-      document.body.classList.add('page-exit');
-      setTimeout(() => {
-        window.location.href = href;
-      }, 400);
-    }
-    document.body.classList.add('page-enter');
-  </script>
+        <!-- Mobile Close Bar -->
+        <div class="md:hidden sticky top-0 bg-gradient-to-r from-[#22c55e20] to-transparent border-b border-[#22c55e]/30 p-4 flex justify-between items-center">
+          <div class="text-sm text-[#22c55e] font-mono">Abstract · Details</div>
+          <button id="closePaperModalMobile" class="text-[#22c55e] hover:text-white">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6 md:p-10">
+          <!-- Version & Date -->
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-[#22c55e] font-mono text-xs font-bold" id="paperVersion"></span>
+            <span class="text-[#22c55e]/50 text-xs" id="paperDate"></span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl md:text-4xl font-bold mb-2" id="paperTitle"></h1>
+          <p class="text-[#22c55e] text-sm mb-8" id="paperSubtitle"></p>
+
+          <!-- Stats Bar -->
+          <div class="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8 pb-8 border-b border-[#22c55e]/20">
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperPages"></div>
+              <div class="text-xs opacity-50">Pages</div>
+            </div>
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperReadTime"></div>
+              <div class="text-xs opacity-50">Read Time</div>
+            </div>
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperAuthors"></div>
+              <div class="text-xs opacity-50">Authors</div>
+            </div>
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperCitations"></div>
+              <div class="text-xs opacity-50">Citations</div>
+            </div>
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperImpact"></div>
+              <div class="text-xs opacity-50">Impact</div>
+            </div>
+            <div class="text-center">
+              <div class="text-[#22c55e] font-bold text-xl" id="paperTier"></div>
+              <div class="text-xs opacity-50">Tier</div>
+            </div>
+          </div>
+
+          <!-- Abstract Section -->
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-[#22c55e]">Abstract</h2>
+            <p id="paperAbstract" class="text-lg leading-relaxed opacity-85"></p>
+          </div>
+
+          <!-- Research Highlights -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-4 text-[#22c55e]">Research Highlights</h3>
+            <ul id="paperHighlights" class="space-y-3"></ul>
+          </div>
+
+          <!-- Key Findings -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-4 text-[#22c55e]">Key Findings</h3>
+            <div id="paperFindings" class="grid md:grid-cols-2 gap-4"></div>
+          </div>
+
+          <!-- Methodology -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-4 text-[#22c55e]">Research Methodology</h3>
+            <p id="paperMethodDesc" class="text-lg leading-relaxed opacity-85"></p>
+          </div>
+
+          <!-- Practical Applications -->
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-4 text-[#22c55e]">Practical Applications</h3>
+            <ul id="paperUseCases" class="space-y-3"></ul>
+          </div>
+
+          <!-- Download CTA -->
+          <div class="bg-gradient-to-r from-[#22c55e20] to-transparent rounded-2xl p-6 mb-8 border border-[#22c55e]/30">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <p class="font-bold text-lg mb-1">Full Paper Available</p>
+                <p class="opacity-70 text-sm">Download the complete whitepaper for detailed technical specifications</p>
+              </div>
+              <button class="bg-[#22c55e] text-black px-8 py-3 rounded-full font-bold flex items-center gap-2 whitespace-nowrap hover:opacity-90 transition">
+                <i class="fas fa-download"></i> Download PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Navigation -->
+          <div class="flex justify-between items-center pt-8 border-t border-[#22c55e]/20">
+            <button id="prevPaper" class="text-[#22c55e] hover:text-white transition flex items-center gap-2">
+              <i class="fas fa-chevron-left"></i>
+              <span class="hidden md:inline">Previous</span>
+            </button>
+            <div class="text-sm opacity-60" id="paperCounter"></div>
+            <button id="nextPaper" class="text-[#22c55e] hover:text-white transition flex items-center gap-2">
+              <span class="hidden md:inline">Next</span>
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Bottom Navigation - Mobile -->
   <nav class="bottom-nav" id="bottomNav">
@@ -248,5 +372,357 @@
     <a href="press.html" onclick="navigatePage(event)"><i class="fas fa-microphone"></i><span>Press</span></a>
     <a href="support.html" onclick="navigatePage(event)"><i class="fas fa-headset"></i><span>Support</span></a>
   </nav>
-</body>
-</html>
+
+  <script>
+    // Whitepapers Data
+    const whitepapers = [
+      {
+        id: 0,
+        title: "Zero-Trust Architecture for Distributed AI Systems",
+        subtitle: "Comprehensive framework for securing AI pipelines",
+        version: "v2.0",
+        date: "May 2026",
+        pages: 42,
+        readTime: "18 min",
+        authors: 2,
+        citations: 156,
+        impact: "High",
+        tier: "Enterprise",
+        abstract: "As organizations scale AI deployments across hybrid cloud environments, traditional security perimeters become obsolete. This whitepaper presents a comprehensive zero-trust architecture specifically designed for AI systems, addressing unique challenges in model pipelines, data governance, and inference security. We analyze threat models, implement practical patterns, and share learnings from Fortune 500 implementations that reduced security incidents by 87%.",
+        highlights: [
+          "Zero-trust model for AI/ML pipelines with granular access controls",
+          "Threat models specific to LLM inference and fine-tuning operations",
+          "Implementation patterns for AWS, Azure, and GCP cloud providers",
+          "87% reduction in security incidents at enterprise scale",
+          "Framework for supply chain security in ML dependencies"
+        ],
+        findings: [
+          { title: "87% Incident Reduction", desc: "Organizations implementing zero-trust for AI reduced breaches significantly" },
+          { title: "Model Poisoning Prevention", desc: "Supply chain verification prevents 99.2% of known attack vectors" },
+          { title: "Inference Security", desc: "Real-time monitoring catches anomalous behavior in 0.3 seconds" },
+          { title: "Cost Optimization", desc: "40% reduction in security tooling through unified platform approach" }
+        ],
+        methodology: "This research was conducted over 18 months across 50 enterprise organizations with stringent security requirements. We employed threat modeling workshops, penetration testing, and longitudinal monitoring of security incidents to validate our architectural recommendations. Data was anonymized and analyzed using statistical methods to ensure reproducibility.",
+        useCases: [
+          "Multi-cloud AI deployments requiring unified security posture",
+          "Organizations running proprietary LLMs with sensitive data",
+          "Financial institutions implementing AI-driven trading systems",
+          "Healthcare providers using AI for diagnostic imaging analysis",
+          "Government agencies deploying AI for critical infrastructure"
+        ]
+      },
+      {
+        id: 1,
+        title: "Post-Quantum Cryptography in Blockchain",
+        subtitle: "Preparing distributed ledgers for quantum computing",
+        version: "v1.2",
+        date: "March 2026",
+        pages: 38,
+        readTime: "16 min",
+        authors: 3,
+        citations: 89,
+        impact: "Critical",
+        tier: "Advanced",
+        abstract: "Quantum computers pose an existential threat to current cryptographic systems. This research explores post-quantum cryptography implementations in blockchain systems, analyzing lattice-based, hash-based, and multivariate polynomial methods. We present migration strategies for existing blockchains, benchmark performance implications, and provide hardened implementations tested against quantum-resistant adversaries.",
+        highlights: [
+          "Lattice-based signature schemes outperform traditional ECDSA by 12%",
+          "Hash-based Merkle trees provide 128-bit quantum-resistant security",
+          "Migration pathways for Ethereum, Bitcoin, and private blockchains",
+          "Zero-downtime upgrade strategies for live networks",
+          "Performance benchmarks across quantum-resistant algorithms"
+        ],
+        findings: [
+          { title: "Lattice Performance", desc: "CRYSTALS-DILITHIUM achieves faster signing than ECDSA" },
+          { title: "Backward Compatibility", desc: "Hybrid signatures maintain legacy support while adding quantum resistance" },
+          { title: "Quantum Threat Timeline", desc: "Estimated 15-20 year window before practical quantum threats" },
+          { title: "Adoption Barriers", desc: "Key size increases of 2-3x are primary implementation challenge" }
+        ],
+        methodology: "We analyzed quantum threat models, benchmarked NIST-recommended post-quantum algorithms, and simulated quantum-resistant adversaries. Testing involved cryptanalysis against current and projected quantum capabilities, plus real-world implementation on Ethereum testnet.",
+        useCases: [
+          "Securing long-term assets against delayed quantum attacks",
+          "Migration planning for major blockchain networks",
+          "Hybrid cryptography implementations for enterprises",
+          "Central bank digital currencies (CBDCs) requiring decades of security",
+          "Supply chain verification systems needing quantum-resistant signatures"
+        ]
+      },
+      {
+        id: 2,
+        title: "LLM Security: Red Teaming Guide",
+        subtitle: "Methodologies for identifying vulnerabilities in large language models",
+        version: "v2.0",
+        date: "February 2026",
+        pages: 52,
+        readTime: "22 min",
+        authors: 4,
+        citations: 234,
+        impact: "High",
+        tier: "Enterprise",
+        abstract: "Large language models present novel attack surfaces not addressed by traditional security testing. This comprehensive guide details red teaming methodologies specifically developed for LLM systems, including prompt injection, jailbreaking, model extraction, and training data poisoning. We provide frameworks for responsible disclosure, evaluation metrics, and deployment-time mitigations.",
+        highlights: [
+          "60+ documented attack patterns against LLMs with proof-of-concept exploits",
+          "Red teaming framework used by 15+ major AI companies",
+          "Evaluation metrics for measuring LLM robustness",
+          "Deployment-time defenses reducing attack success rates by 94%",
+          "Responsible disclosure process for AI vulnerabilities"
+        ],
+        findings: [
+          { title: "Prompt Injection", desc: "90% of undefended models vulnerable to instruction overrides" },
+          { title: "Jailbreaking Success", desc: "Multiple vectors bypass safety guidelines in unpatched models" },
+          { title: "Model Extraction", desc: "API models can be cloned with <1% performance loss" },
+          { title: "Defense Effectiveness", desc: "Multi-layer defenses reduce vulnerability by 94%" }
+        ],
+        methodology: "Red team exercises were conducted with 25 different LLMs over 6 months. Attack methodologies were developed iteratively, validated through responsible disclosure, and tested against deployed production systems with permission.",
+        useCases: [
+          "Pre-deployment security testing for LLM applications",
+          "Enterprise red teaming programs for AI safety",
+          "Responsible disclosure coordination for AI security",
+          "Regulatory compliance and audit requirements",
+          "Training programs for AI security engineers"
+        ]
+      },
+      {
+        id: 3,
+        title: "Multi-Cloud Network Security Mesh",
+        subtitle: "Implementing zero-trust across AWS, Azure, and GCP simultaneously",
+        version: "v1.5",
+        date: "January 2026",
+        pages: 46,
+        readTime: "20 min",
+        authors: 3,
+        citations: 145,
+        impact: "High",
+        tier: "Enterprise",
+        abstract: "Multi-cloud deployments create security complexity across disparate control planes and networks. This whitepaper presents a unified security mesh architecture enabling consistent zero-trust enforcement across AWS, Azure, and GCP. We detail cloud-agnostic service mesh implementations, mutual TLS patterns, and centralized policy management.",
+        highlights: [
+          "Unified policy enforcement across 3+ cloud providers",
+          "Cloud-agnostic service mesh with Istio and Linkerd",
+          "Automated mTLS certificate lifecycle management",
+          "39% reduction in cross-cloud security incidents",
+          "Real-time visibility into multi-cloud traffic patterns"
+        ],
+        findings: [
+          { title: "Cloud Consistency", desc: "Unified mesh enables identical security posture across clouds" },
+          { title: "Performance Overhead", desc: "3-5% latency increase with comprehensive security inspection" },
+          { title: "Incident Response", desc: "39% faster detection of anomalies with centralized logging" },
+          { title: "Cost Savings", desc: "Consolidated tooling reduces spend by 35%" }
+        ],
+        methodology: "Architecture was tested in production deployments across 8 enterprises with varying cloud strategies. Performance metrics, security incident rates, and operational overhead were measured over 12 months.",
+        useCases: [
+          "Enterprises with multi-cloud vendor strategies",
+          "Organizations migrating workloads between providers",
+          "Hybrid cloud deployments with on-premises infrastructure",
+          "Global enterprises requiring data sovereignty",
+          "Service providers offering multi-cloud managed services"
+        ]
+      },
+      {
+        id: 4,
+        title: "AI-Driven Threat Detection",
+        subtitle: "Machine learning models for real-time intrusion prevention",
+        version: "v3.1",
+        date: "December 2025",
+        pages: 34,
+        readTime: "14 min",
+        authors: 2,
+        citations: 198,
+        impact: "High",
+        tier: "Enterprise",
+        abstract: "Traditional signature-based intrusion detection systems struggle against novel attacks. This research presents advanced machine learning models for real-time threat detection, achieving 96.1% accuracy on zero-day exploits. We detail feature engineering, model architectures, and production deployment strategies that don't require labeled datasets.",
+        highlights: [
+          "96.1% accuracy detecting zero-day attacks with <2ms latency",
+          "Unsupervised learning models requiring zero labeled data",
+          "Real-time adaptation to emerging threat patterns",
+          "38x faster detection than signature-based systems",
+          "Reduced alert fatigue with 99.2% precision"
+        ],
+        findings: [
+          { title: "Zero-Day Detection", desc: "ML models detect novel attacks signature systems miss entirely" },
+          { title: "False Positive Rate", desc: "99.2% precision reduces alert fatigue by 94%" },
+          { title: "Performance Impact", desc: "Minimal CPU overhead with GPU acceleration" },
+          { title: "Adaptability", desc: "Models adapt to new threats within 4 hours of emergence" }
+        ],
+        methodology: "Models were trained on 2.8 billion network packets from 100+ networks, validated against DARPA/NSF datasets, and tested in production environments detecting real attacks.",
+        useCases: [
+          "SOC operations requiring real-time threat detection",
+          "Critical infrastructure protecting against APTs",
+          "Financial institutions detecting fraud and intrusions",
+          "Managed security service providers offering detection",
+          "Government agencies protecting sensitive networks"
+        ]
+      },
+      {
+        id: 5,
+        title: "Secure Enclaves for Confidential Computing",
+        subtitle: "Using Intel SGX and AMD SEV for data-in-use protection",
+        version: "v1.0",
+        date: "November 2025",
+        pages: 28,
+        readTime: "12 min",
+        authors: 2,
+        citations: 67,
+        impact: "Advanced",
+        tier: "Advanced",
+        abstract: "Hardware-based Trusted Execution Environments enable encryption of data-in-use, closing the final frontier in data protection. This paper explores Intel SGX and AMD SEV technologies, their security properties, practical limitations, and real-world deployment challenges at scale.",
+        highlights: [
+          "Hardware-accelerated encryption for data-in-use operations",
+          "Intel SGX and AMD SEV architectural comparison",
+          "Practical deployment patterns for enterprise workloads",
+          "Performance overhead analysis: 15-40% depending on workload",
+          "Threat models and limitations of current TEE implementations"
+        ],
+        findings: [
+          { title: "SGX vs SEV Tradeoffs", desc: "SGX stronger isolation, SEV better performance for large workloads" },
+          { title: "Overhead Costs", desc: "15-40% performance penalty depending on memory access patterns" },
+          { title: "Security Limitations", desc: "Side-channel attacks still possible, mitigations required" },
+          { title: "Adoption Rate", desc: "Enterprise adoption increasing 40% YoY" }
+        ],
+        methodology: "Architecture comparison based on security specifications, threat models, and extensive performance benchmarking across enterprise workloads.",
+        useCases: [
+          "Cloud providers offering confidential computing services",
+          "Healthcare organizations processing sensitive patient data",
+          "Financial institutions computing on encrypted transactions",
+          "Research institutions protecting proprietary algorithms",
+          "Government agencies with strict data protection requirements"
+        ]
+      },
+      {
+        id: 6,
+        title: "DeFi Protocol Security Audit Standard",
+        subtitle: "Comprehensive framework for smart contract auditing",
+        version: "v2.3",
+        date: "October 2025",
+        pages: 62,
+        readTime: "26 min",
+        authors: 5,
+        citations: 312,
+        impact: "Critical",
+        tier: "Enterprise",
+        abstract: "The DeFi ecosystem has suffered billions in losses due to smart contract vulnerabilities. This whitepaper establishes a comprehensive auditing standard covering static analysis, dynamic testing, formal verification, and economic security reviews. Used by 50+ auditing firms and protocols, this framework reduces vulnerability disclosure by 89%.",
+        highlights: [
+          "89% reduction in disclosed vulnerabilities for audited protocols",
+          "Comprehensive 9-phase audit methodology",
+          "Formal verification techniques for critical components",
+          "Economic security and game theory analysis",
+          "Adopted by 80+ DeFi protocols and auditing firms"
+        ],
+        findings: [
+          { title: "Vulnerability Reduction", desc: "Protocols following standard have 89% fewer disclosed issues" },
+          { title: "Most Critical Issues", desc: "Reentrancy and oracle manipulation account for 67% of attacks" },
+          { title: "Audit Cost vs Risk", desc: "Comprehensive audits prevent $M losses with $K investment" },
+          { title: "Formal Verification ROI", desc: "FV catches 34% more issues than manual review alone" }
+        ],
+        methodology: "Framework developed from analysis of 200+ audited protocols, 50+ security incidents, and expert consensus from leading auditing firms and security researchers.",
+        useCases: [
+          "DeFi protocols seeking security validation",
+          "Institutional investors performing due diligence",
+          "Auditing firms standardizing methodologies",
+          "Regulators establishing DeFi security frameworks",
+          "Protocol developers implementing security best practices"
+        ]
+      }
+    ];
+
+    let currentPaperIndex = 0;
+
+    function openWhitepaperModal(index, event) {
+      event.preventDefault();
+      currentPaperIndex = index;
+      const modal = document.getElementById('whitepaperModal');
+      const paper = whitepapers[index];
+      
+      // Populate modal with content
+      document.getElementById('paperVersion').textContent = paper.version;
+      document.getElementById('paperDate').textContent = paper.date;
+      document.getElementById('paperTitle').textContent = paper.title;
+      document.getElementById('paperSubtitle').textContent = paper.subtitle;
+      document.getElementById('paperPages').textContent = paper.pages;
+      document.getElementById('paperReadTime').textContent = paper.readTime;
+      document.getElementById('paperAuthors').textContent = paper.authors;
+      document.getElementById('paperCitations').textContent = paper.citations;
+      document.getElementById('paperImpact').textContent = paper.impact;
+      document.getElementById('paperTier').textContent = paper.tier;
+      
+      // Populate abstract
+      document.getElementById('paperAbstract').textContent = paper.abstract;
+      
+      // Populate highlights
+      const highlightsDiv = document.getElementById('paperHighlights');
+      highlightsDiv.innerHTML = paper.highlights
+        .map(highlight => `<li class="flex items-start gap-3"><i class="fas fa-star text-[#22c55e] mt-1 flex-shrink-0"></i><span>${highlight}</span></li>`)
+        .join('');
+      
+      // Populate findings
+      const findingsDiv = document.getElementById('paperFindings');
+      findingsDiv.innerHTML = paper.findings
+        .map(finding => `<div class="bg-black/40 border border-[#22c55e]/30 rounded-xl p-4"><div class="text-[#22c55e] font-bold mb-2">${finding.title}</div><div class="text-sm opacity-80">${finding.desc}</div></div>`)
+        .join('');
+      
+      // Populate methodology
+      document.getElementById('paperMethodDesc').textContent = paper.methodology;
+      
+      // Populate use cases
+      const useCasesDiv = document.getElementById('paperUseCases');
+      useCasesDiv.innerHTML = paper.useCases
+        .map(useCase => `<li class="flex items-start gap-3"><i class="fas fa-check-circle text-[#22c55e] mt-1 flex-shrink-0"></i><span>${useCase}</span></li>`)
+        .join('');
+      
+      // Update counter
+      document.getElementById('paperCounter').textContent = `${index + 1} / ${whitepapers.length}`;
+      
+      // Show modal
+      modal.style.opacity = '1';
+      modal.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'hidden';
+      
+      // Scroll to top of modal
+      const modalContent = document.getElementById('paperModalContent');
+      setTimeout(() => { modalContent.scrollTop = 0; }, 50);
+    }
+
+    function closeWhitepaperModal() {
+      const modal = document.getElementById('whitepaperModal');
+      modal.style.opacity = '0';
+      modal.style.pointerEvents = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function nextPaper() {
+      if (currentPaperIndex < whitepapers.length - 1) {
+        openWhitepaperModal(currentPaperIndex + 1, { preventDefault: () => {} });
+        const modalContent = document.getElementById('paperModalContent');
+        setTimeout(() => { modalContent.scrollTop = 0; }, 50);
+      }
+    }
+
+    function prevPaper() {
+      if (currentPaperIndex > 0) {
+        openWhitepaperModal(currentPaperIndex - 1, { preventDefault: () => {} });
+        const modalContent = document.getElementById('paperModalContent');
+        setTimeout(() => { modalContent.scrollTop = 0; }, 50);
+      }
+    }
+
+    // Event listeners
+    document.getElementById('closePaperModal').addEventListener('click', closeWhitepaperModal);
+    document.getElementById('closePaperModalMobile').addEventListener('click', closeWhitepaperModal);
+    document.getElementById('nextPaper').addEventListener('click', nextPaper);
+    document.getElementById('prevPaper').addEventListener('click', prevPaper);
+    
+    // Close on background click
+    document.getElementById('whitepaperModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeWhitepaperModal();
+      }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('whitepaperModal');
+      if (modal.style.opacity === '1') {
+        if (e.key === 'Escape') closeWhitepaperModal();
+        if (e.key === 'ArrowRight') nextPaper();
+        if (e.key === 'ArrowLeft') prevPaper();
+      }
+    });
+  </script>

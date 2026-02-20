@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a0a0f">
   <title>Phoenix 28 Tech · Documentation</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" as="style">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     :root {
@@ -15,25 +19,10 @@
       --neon-glow: 0 0 10px #22c55e, 0 0 20px rgba(34, 197, 94, 0.3);
       --dark-bg: #0a0a0f;
     }
-    * { box-sizing: border-box; }
-    html { 
-      scroll-behavior: auto; 
-    }
-    /* Hide scrollbars for all devices */
-    html, body {
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    html::-webkit-scrollbar, body::-webkit-scrollbar {
-      display: none;
-    }
     body {
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--dark-bg);
       color: #e0e0e0;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
     }
     .ios-26-glass-dark {
       background: rgba(8, 10, 15, 0.7);
@@ -42,29 +31,12 @@
       border: 1px solid rgba(34,197,94,0.2);
       box-shadow: var(--neon-glow);
       border-radius: 1.5rem;
-      will-change: transform;
-      contain: layout;
     }
     .doc-sidebar {
       position: sticky;
       top: 100px;
       height: calc(100vh - 120px);
       overflow-y: auto;
-      overflow-x: hidden;
-      will-change: contents;
-    }
-    .doc-sidebar::-webkit-scrollbar {
-      width: 0;
-    }
-    .doc-sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .doc-sidebar::-webkit-scrollbar-thumb {
-      background: rgba(34, 197, 94, 0.3);
-      border-radius: 3px;
-    }
-    .doc-sidebar::-webkit-scrollbar-thumb:hover {
-      background: rgba(34, 197, 94, 0.5);
     }
     .doc-link {
       display: inline-flex;
@@ -73,18 +45,16 @@
       padding: 0.75rem 1.35rem;
       border-left: 3px solid transparent;
       border-radius: 0.6rem;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      transition: all 0.3s ease;
       font-size: 0.93rem;
       color: #b3b3b3;
       min-height: 2.75rem;
-      cursor: pointer;
-      user-select: none;
     }
     .doc-link i {
       min-width: 1rem;
       text-align: center;
       color: #22c55e;
-      flex-shrink: 0;
+      transition: all 0.3s ease;
     }
     .doc-link:hover {
       border-left-color: #22c55e;
@@ -92,20 +62,20 @@
       color: #e0e0e0;
       padding-left: 1.5rem;
     }
+    .doc-link:hover i {
+      transform: translateX(3px);
+    }
     .doc-link.active {
       border-left-color: #22c55e;
       background: rgba(34, 197, 94, 0.15);
       color: #22c55e;
       font-weight: 500;
     }
-    header {
-      contain: layout;
-      will-change: contents;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .doc-link.active i {
+      text-shadow: 0 0 8px #22c55e;
     }
     nav a {
-      transition: text-shadow 0.2s ease;
+      transition: all 0.3s ease;
     }
     nav a:hover {
       text-shadow: 0 0 10px #22c55e;
@@ -125,26 +95,23 @@
       padding: 1rem;
       overflow-x: auto;
       font-family: 'Roboto Mono', monospace;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      contain: layout;
-    }
-    pre::-webkit-scrollbar {
-      height: 0;
-    }
-    pre::-webkit-scrollbar-thumb {
-      background: rgba(34, 197, 94, 0.3);
-      border-radius: 2px;
     }
     code {
       color: #22c55e;
     }
-    @keyframes pageInFast {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+    body.page-exit {
+      animation: pageOut 0.4s ease-in-out forwards;
     }
     body.page-enter {
-      animation: pageInFast 0.3s ease-out forwards;
+      animation: pageIn 0.4s ease-in-out forwards;
     }
     /* Bottom Navigation - Mobile Only */
     .bottom-nav {
@@ -153,25 +120,19 @@
       bottom: 16px;
       left: 16px;
       right: 16px;
-      background: rgba(10, 10, 15, 0.95);
+      background: rgba(10, 10, 15, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(34, 197, 94, 0.5);
       border-radius: 40px;
       z-index: 50;
       padding: 10px 6px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.3);
       justify-content: space-around;
-      will-change: contents;
-      contain: layout;
     }
     @media (max-width: 768px) {
-      .bottom-nav { 
-        display: flex; 
-      }
-      main { 
-        padding-bottom: 100px; 
-      }
+      .bottom-nav { display: flex; }
+      main { padding-bottom: 120px; }
     }
     .bottom-nav a {
       display: flex;
@@ -181,30 +142,23 @@
       font-size: 11px;
       color: #22c55e;
       text-decoration: none;
-      transition: color 0.2s;
+      transition: 0.2s;
       flex: 1 0 0;
       padding: 6px 0;
-      cursor: pointer;
     }
-    .bottom-nav a i { 
-      font-size: 20px; 
-      margin-bottom: 4px;
-      display: block;
-    }
-    .bottom-nav a:hover { 
-      color: white; 
-    }
-    .bottom-nav a.active { 
-      color: white; 
-      text-shadow: 0 0 10px #22c55e; 
-    }
+    .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+    .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
+    .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
     /* Section visibility */
     .doc-section {
       display: none;
-      animation: pageInFast 0.3s ease-out forwards;
+      animation: pageIn 0.4s ease-in-out forwards;
     }
     .doc-section.active {
       display: block;
+    }
+    .doc-link {
+      cursor: pointer;
     }
     /* Side Navigation for Mobile */
     .side-nav {
@@ -214,26 +168,30 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 50;
-      background: rgba(10, 10, 15, 0.95);
+      background: rgba(10, 10, 15, 0.6);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(34, 197, 94, 0.4);
       border-radius: 40px;
       padding: 12px 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
       flex-direction: column;
       gap: 8px;
       max-height: 80vh;
       overflow-y: auto;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       opacity: 1;
-      will-change: transform, opacity;
-      contain: layout;
     }
     .side-nav.hidden {
       opacity: 0;
       pointer-events: none;
       transform: translateY(-50%) translateX(-100px);
+    }
+    .side-nav.collapsed {
+      width: 66px;
+    }
+    .side-nav.expanded {
+      width: auto;
     }
     @media (max-width: 768px) {
       .side-nav {
@@ -244,6 +202,7 @@
       }
     }
     .side-nav-toggle-fab {
+      display: none;
       position: fixed;
       left: 16px;
       top: 50%;
@@ -257,17 +216,36 @@
       color: black;
       cursor: pointer;
       font-size: 28px;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      will-change: transform;
-      contain: layout;
+      box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4), 0 0 15px rgba(34, 197, 94, 0.3), inset 0 -2px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: fabFloat 3s ease-in-out infinite;
+    }
+    @keyframes fabFloat {
+      0%, 100% { transform: translateY(-50%) translateY(0px); }
+      50% { transform: translateY(-50%) translateY(-12px); }
+    }
+    @keyframes fabPulse {
+      0% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4), 0 0 15px rgba(34, 197, 94, 0.3), inset 0 -2px 8px rgba(0,0,0,0.2); }
+      50% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.6), 0 0 25px rgba(34, 197, 94, 0.5), inset 0 -2px 8px rgba(0,0,0,0.2); }
+      100% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4), 0 0 15px rgba(34, 197, 94, 0.3), inset 0 -2px 8px rgba(0,0,0,0.2); }
+    }
+    .side-nav-toggle-fab::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, rgba(34, 197, 94, 0) 70%);
+      animation: fabPulse 2.5s ease-in-out infinite;
+      z-index: -1;
     }
     .side-nav-toggle-fab:hover {
       transform: translateY(-50%) scale(1.15);
-      box-shadow: 0 6px 28px rgba(34, 197, 94, 0.6);
+      box-shadow: 0 6px 28px rgba(34, 197, 94, 0.6), 0 0 25px rgba(34, 197, 94, 0.5), inset 0 -2px 8px rgba(0,0,0,0.2);
+      animation: none;
     }
     .side-nav-toggle-fab:active {
       transform: translateY(-50%) scale(0.95);
@@ -293,12 +271,10 @@
       border-radius: 12px;
       color: #22c55e;
       cursor: pointer;
-      transition: background-color 0.2s, transform 0.2s;
+      transition: all 0.3s;
       font-size: 18px;
       position: relative;
       flex-shrink: 0;
-      will-change: transform;
-      contain: layout;
     }
     .side-nav-btn:hover {
       background: rgba(34, 197, 94, 0.2);
@@ -320,7 +296,7 @@
       border-radius: 12px;
       color: #22c55e;
       cursor: pointer;
-      transition: background-color 0.2s, transform 0.2s;
+      transition: all 0.3s;
       font-size: 16px;
       border-top: 1px solid rgba(34, 197, 94, 0.2);
       border-bottom: 1px solid rgba(34, 197, 94, 0.2);
@@ -343,7 +319,7 @@
       color: #e0e0e0;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.3s;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     .side-nav-btn:hover .side-nav-label {
@@ -355,61 +331,18 @@
         display: none;
       }
     }
-    /* Modal scrollbar removal */
-    .modal-content {
-      scrollbar-width: none;
-    }
-    .modal-content::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
-    .modal-content::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .modal-content::-webkit-scrollbar-thumb {
-      background: transparent;
-    }
-    /* Mobile modal close button */
-    .modal-close-mobile {
-      display: none;
-      position: absolute;
-      top: 1.5rem;
-      right: 4.5rem;
-      background: transparent;
-      border: none;
-      color: #22c55e;
-      font-size: 1.75rem;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 10;
-    }
-    .modal-close-mobile:hover {
-      color: #1aa347;
-    }
-    @media (max-width: 768px) {
-      .modal-close-mobile {
-        display: block;
-      }
-    }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header class="fixed top-5 left-5 right-5 z-30 ios-26-glass-dark" style="border-radius: 18px;">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center justify-between w-full">
-        <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2" onclick="navigatePage(event)">
         <span class="text-2xl font-bold tracking-tighter">
           <span class="text-[#22c55e]">◈</span>
           <span class="ml-2">Phoenix 28</span>
         </span>
-        
-        <!-- Back Home Button - Desktop Only -->
-        <a href="index.html" onclick="navigatePage(event)" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-[#22c55e] text-[#22c55e] font-medium hover:bg-[rgba(34,197,94,0.1)] transition-colors">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back Home</span>
-        </a>
-      </div>
+      </a>
       
     </div>
   </header>
@@ -550,7 +483,7 @@
       </div>
 
       <!-- Main Content -->
-      <div class="flex-1 max-w-4xl">
+      <div class="flex-1">
         <h1 class="text-4xl font-mono mb-6"><span class="text-[#22c55e]">//</span> documentation</h1>
         
         <!-- Introduction Section -->
@@ -605,7 +538,7 @@ console.log(result.riskScore); // 0.02 (low risk)</code></pre>
                 <div class="text-sm opacity-70">See example above</div>
               </div>
             </div>
-            <button onclick="openQuickstartModal()" class="bg-[#22c55e] text-black px-6 py-2 rounded-full font-medium hover:bg-[#1aa347] transition-colors">View Full Quickstart →</button>
+            <button class="bg-[#22c55e] text-black px-6 py-2 rounded-full">View Full Quickstart →</button>
           </div>
         </div>
 
@@ -879,127 +812,38 @@ Authorization: Bearer YOUR_API_KEY
         <!-- SDKs Section -->
         <div id="sdks" class="doc-section">
           <div class="grid md:grid-cols-2 gap-6">
-            <div class="ios-26-glass-dark p-6 rounded-3xl cursor-pointer hover:shadow-lg transition-all" onclick="openSDKModal()"><i class="fas fa-book text-3xl text-[#22c55e] mb-3"></i>
+            <div class="ios-26-glass-dark p-6 rounded-3xl">
+              <i class="fas fa-book text-3xl text-[#22c55e] mb-3"></i>
               <h3 class="text-xl font-bold mb-2">SDK Reference</h3>
               <p class="opacity-70 text-sm mb-4">JavaScript, Python, Go, and Rust SDKs with examples and full API coverage.</p>
-              <a href="javascript:void(0)" class="text-[#22c55e] font-medium">Browse SDKs →</a>
+              <a href="#" class="text-[#22c55e]">Browse SDKs →</a>
             </div>
-            <div class="ios-26-glass-dark p-6 rounded-3xl cursor-pointer hover:shadow-lg transition-all" onclick="openDeploymentModal()"><i class="fas fa-cloud text-3xl text-[#22c55e] mb-3"></i>
+            <div class="ios-26-glass-dark p-6 rounded-3xl">
+              <i class="fas fa-cloud text-3xl text-[#22c55e] mb-3"></i>
               <h3 class="text-xl font-bold mb-2">Deployment Guides</h3>
               <p class="opacity-70 text-sm mb-4">AWS, Azure, GCP, and on-premises deployment patterns with architecture diagrams.</p>
-              <a href="javascript:void(0)" class="text-[#22c55e] font-medium">View Guides →</a>
+              <a href="#" class="text-[#22c55e]">View Guides →</a>
             </div>
-            <div class="ios-26-glass-dark p-6 rounded-3xl cursor-pointer hover:shadow-lg transition-all" onclick="openSecurityModal()"><i class="fas fa-shield text-3xl text-[#22c55e] mb-3"></i>
+            <div class="ios-26-glass-dark p-6 rounded-3xl">
+              <i class="fas fa-shield text-3xl text-[#22c55e] mb-3"></i>
               <h3 class="text-xl font-bold mb-2">Security Configuration</h3>
               <p class="opacity-70 text-sm mb-4">Hardening guides, IAM setup, encryption configuration, and audit logging.</p>
-              <a href="javascript:void(0)" class="text-[#22c55e] font-medium">Security Docs →</a>
+              <a href="#" class="text-[#22c55e]">Security Docs →</a>
             </div>
-            <div class="ios-26-glass-dark p-6 rounded-3xl cursor-pointer hover:shadow-lg transition-all" onclick="openChangelogModal()"><i class="fas fa-code-branch text-3xl text-[#22c55e] mb-3"></i>
+            <div class="ios-26-glass-dark p-6 rounded-3xl">
+              <i class="fas fa-code-branch text-3xl text-[#22c55e] mb-3"></i>
               <h3 class="text-xl font-bold mb-2">API Changelog</h3>
               <p class="opacity-70 text-sm mb-4">Latest updates, deprecations, version history, and migration guides.</p>
-              <a href="javascript:void(0)" class="text-[#22c55e] font-medium">View Changes →</a>
+              <a href="#" class="text-[#22c55e]">View Changes →</a>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </main>
 
-  <!-- SDK Reference Modal -->
-  <div id="sdkModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 overflow-y-auto">
-    <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="ios-26-glass-dark rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div class="sticky top-0 flex items-center justify-between p-6 border-b border-[#22c55e33] bg-[rgba(8,10,15,0.8)] relative">
-          <h2 class=text-2xl font-bold text-[#22c55e]>SDK Reference</h2>
-          <button onclick="closeSDKModal()" class="modal-close-mobile text-[#22c55e] hover:text-[#1aa347] transition-colors"><i class="fas fa-chevron-down text-2xl"></i></button>
-          <button onclick="closeSDKModal()" class=text-gray-400 hover:text-white transition-colors><i class=fas fa-times text-2xl></i></button>
-        </div>
-        <div class="modal-content flex-1 overflow-y-auto p-8 space-y-6">
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>JavaScript/TypeScript SDK</h3><p class=opacity-80 mb-3>Full-featured TypeScript SDK with complete type coverage.</p><pre class=bg-black/50 p-4 rounded-lg border border-[#22c55e33] overflow-x-auto text-sm><code>npm install phoenix-sdk</code></pre><div class=mt-4 space-y-2 text-sm><p><strong>Latest Version:</strong> 2.5.0</p><p><strong>Node Version:</strong> 16+</p><p><strong>Features:</strong> Full API coverage, Real-time subscriptions, Error handling, Retry logic</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Python SDK</h3><p class=opacity-80 mb-3>Pythonic API with async/await support.</p><pre class=bg-black/50 p-4 rounded-lg border border-[#22c55e33] overflow-x-auto text-sm><code>pip install phoenix-sdk</code></pre><div class=mt-4 space-y-2 text-sm><p><strong>Latest Version:</strong> 2.5.0</p><p><strong>Python Version:</strong> 3.8+</p><p><strong>Features:</strong> Async client, Type hints, Pandas integration</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Go SDK</h3><p class=opacity-80 mb-3>High-performance SDK with built-in concurrency support.</p><pre class=bg-black/50 p-4 rounded-lg border border-[#22c55e33] overflow-x-auto text-sm><code>go get github.com/phoenix28/sdk-go</code></pre><div class=mt-4 space-y-2 text-sm><p><strong>Latest Version:</strong> 2.5.0</p><p><strong>Go Version:</strong> 1.16+</p><p><strong>Features:</strong> Context support, Error wrapping, Connection pooling</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Rust SDK</h3><p class=opacity-80 mb-3>Zero-copy SDK with memory safety guarantees.</p><pre class=bg-black/50 p-4 rounded-lg border border-[#22c55e33] overflow-x-auto text-sm><code>cargo add phoenix-sdk</code></pre><div class=mt-4 space-y-2 text-sm><p><strong>Latest Version:</strong> 2.5.0</p><p><strong>MSRV:</strong> 1.56</p><p><strong>Features:</strong> Tokio async runtime, Serde support, Custom transports</p></div></div>
-        </div>
-        <div class=sticky bottom-0 flex justify-end gap-3 p-6 border-t border-[#22c55e33] bg-[rgba(8,10,15,0.8)]>
-          <button onclick="closeSDKModal()" class=px-6 py-2 rounded-full border border-[#22c55e] text-[#22c55e] font-medium hover:bg-[rgba(34,197,94,0.1)] transition-colors>Close</button>
-          <a href=https://github.com/phoenix28 target=_blank class=px-6 py-2 rounded-full bg-[#22c55e] text-black font-medium hover:bg-[#1aa347] transition-colors>View on GitHub</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Deployment Guides Modal -->
-  <div id="deploymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 overflow-y-auto">
-    <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="ios-26-glass-dark rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div class="sticky top-0 flex items-center justify-between p-6 border-b border-[#22c55e33] bg-[rgba(8,10,15,0.8)] relative">
-          <h2 class=text-2xl font-bold text-[#22c55e]>Deployment Guides</h2>
-          <button onclick="closeDeploymentModal()" class="modal-close-mobile text-[#22c55e] hover:text-[#1aa347] transition-colors"><i class="fas fa-chevron-down text-2xl"></i></button>
-          <button onclick="closeDeploymentModal()" class=text-gray-400 hover:text-white transition-colors><i class=fas fa-times text-2xl></i></button>
-        </div>
-        <div class="modal-content flex-1 overflow-y-auto p-8 space-y-6">
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>AWS Deployment</h3><ul class=space-y-2 text-sm opacity-90><li><strong>ECS Fargate:</strong> Serverless container deployment with auto-scaling</li><li><strong>Lambda:</strong> Event-driven serverless functions</li><li><strong>RDS:</strong> PostgreSQL/MySQL database with automatic backups</li><li><strong>ElastiCache:</strong> Redis caching layer</li><li><strong>CloudFront:</strong> CDN for API responses</li></ul><div class=mt-4 p-4 bg-[rgba(34,197,94,0.1)] rounded-lg border border-[#22c55e33]><p class=text-sm><strong> Recommendation:</strong> Use ECS Fargate with Application Load Balancer (ALB) for high-availability deployments.</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Azure Deployment</h3><ul class=space-y-2 text-sm opacity-90><li><strong>Container Instances:</strong> Quick container deployment</li><li><strong>App Service:</strong> Managed applications with auto-scaling</li><li><strong>Azure Database:</strong> PostgreSQL/MySQL managed services</li><li><strong>Azure Redis Cache:</strong> Managed Redis service</li><li><strong>Application Gateway:</strong> Load balancing and WAF</li></ul></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Kubernetes Deployment</h3><pre class=bg-black/50 p-4 rounded-lg border border-[#22c55e33] overflow-x-auto text-sm><code>helm repo add phoenix28 https://charts.phoenix28.io
-helm install phoenix28 phoenix28/deployment --namespace production --values values.yaml</code></pre><div class=mt-4 space-y-2 text-sm opacity-90><p><strong>Requirements:</strong> K8s 1.21+, Helm 3.0+</p><p><strong>Includes:</strong> Service mesh (Istio), Monitoring (Prometheus), Logging (ELK)</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>On-Premises Deployment</h3><ul class=space-y-2 text-sm opacity-90><li><strong>Docker Compose:</strong> Single-node testing deployments</li><li><strong>VM-based:</strong> Multi-node high-availability setup</li><li><strong>Bare Metal:</strong> Performance-critical deployments</li><li><strong>Support:</strong> Professional deployment services available</li></ul></div>
-        </div>
-        <div class=sticky bottom-0 flex justify-end gap-3 p-6 border-t border-[#22c55e33] bg-[rgba(8,10,15,0.8)]>
-          <button onclick="closeDeploymentModal()" class=px-6 py-2 rounded-full border border-[#22c55e] text-[#22c55e] font-medium hover:bg-[rgba(34,197,94,0.1)] transition-colors>Close</button>
-          <a href=support.html class=px-6 py-2 rounded-full bg-[#22c55e] text-black font-medium hover:bg-[#1aa347] transition-colors>Get Help</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Security Configuration Modal -->
-  <div id="securityModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 overflow-y-auto">
-    <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="ios-26-glass-dark rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div class="sticky top-0 flex items-center justify-between p-6 border-b border-[#22c55e33] bg-[rgba(8,10,15,0.8)] relative">
-          <h2 class=text-2xl font-bold text-[#22c55e]>Security Configuration</h2>
-          <button onclick="closeSecurityModal()" class="modal-close-mobile text-[#22c55e] hover:text-[#1aa347] transition-colors"><i class="fas fa-chevron-down text-2xl"></i></button>
-          <button onclick="closeSecurityModal()" class=text-gray-400 hover:text-white transition-colors><i class=fas fa-times text-2xl></i></button>
-        </div>
-        <div class="modal-content flex-1 overflow-y-auto p-8 space-y-6">
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>API Key Management</h3><ul class=space-y-2 text-sm opacity-90><li> <strong>Rotation:</strong> Rotate keys every 90 days</li><li> <strong>Storage:</strong> Use environment variables or secure vaults</li><li> <strong>Expiration:</strong> Set TTL for temporary credentials</li><li> <strong>Scoping:</strong> Use scoped keys with minimal permissions</li><li> <strong>Audit:</strong> Enable key usage logging and alerts</li></ul></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Encryption Configuration</h3><div class=space-y-3 text-sm opacity-90><div><p><strong>In Transit (TLS 1.3)</strong></p><pre class=bg-black/50 p-3 rounded mt-2><code>ciphers:
-  - TLS_AES_256_GCM_SHA384
-  - TLS_CHACHA20_POLY1305_SHA256</code></pre></div><div><p><strong>At Rest (AES-256-GCM)</strong></p><p>Database encryption enabled by default</p></div><div><p><strong>Field-Level:</strong> PII/PHI fields encrypted with key rotation</p></div></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Network Security</h3><div class=space-y-2 text-sm opacity-90><p><strong>DDoS Protection:</strong> Built-in rate limiting (1000 req/min default)</p><p><strong>WAF Rules:</strong> OWASP Top 10 protections</p><p><strong>IP Whitelisting:</strong> Restrict API access by IP ranges</p><p><strong>VPC/VNet:</strong> Private endpoint support for cloud deployments</p><p><strong>mTLS:</strong> Mutual TLS for service-to-service communication</p></div></div>
-          <div><h3 class=text-xl font-bold mb-3 text-[#22c55e]>Compliance & Audit</h3><ul class=space-y-2 text-sm opacity-90><li> <strong>SOC2 Type II:</strong> Annual audits</li><li> <strong>GDPR:</strong> Data retention policies and right to be forgotten</li><li> <strong>HIPAA:</strong> Healthcare data compliance</li><li> <strong>Audit Logs:</strong> Immutable blockchain-backed logging</li><li> <strong>Monitoring:</strong> 24/7 security monitoring and alerting</li></ul></div>
-        </div>
-        <div class=sticky bottom-0 flex justify-end gap-3 p-6 border-t border-[#22c55e33] bg-[rgba(8,10,15,0.8)]>
-          <button onclick="closeSecurityModal()" class=px-6 py-2 rounded-full border border-[#22c55e] text-[#22c55e] font-medium hover:bg-[rgba(34,197,94,0.1)] transition-colors>Close</button>
-          <a href=support.html class=px-6 py-2 rounded-full bg-[#22c55e] text-black font-medium hover:bg-[#1aa347] transition-colors>Security Contact</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- API Changelog Modal -->
-  <div id="changelogModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 overflow-y-auto">
-    <div class="min-h-screen flex items-center justify-center p-4">
-      <div class="ios-26-glass-dark rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div class="sticky top-0 flex items-center justify-between p-6 border-b border-[#22c55e33] bg-[rgba(8,10,15,0.8)] relative">
-          <h2 class=text-2xl font-bold text-[#22c55e]>API Changelog</h2>
-          <button onclick="closeChangelogModal()" class="modal-close-mobile text-[#22c55e] hover:text-[#1aa347] transition-colors"><i class="fas fa-chevron-down text-2xl"></i></button>
-          <button onclick="closeChangelogModal()" class=text-gray-400 hover:text-white transition-colors><i class=fas fa-times text-2xl></i></button>
-        </div>
-        <div class="modal-content flex-1 overflow-y-auto p-8 space-y-6">
-          <div class=border-l-4 border-green-500 pl-4><h3 class=text-lg font-bold text-green-500 mb-2>v2.5.0 - Feb 2026</h3><ul class=space-y-1 text-sm opacity-90><li> New: Real-time WebSocket subscriptions</li><li> New: GraphQL schema introspection</li><li> Fixed: Connection pooling memory leak</li><li> Improved: 40% faster batch operations</li></ul></div>
-          <div class=border-l-4 border-blue-500 pl-4><h3 class=text-lg font-bold text-blue-500 mb-2>v2.4.0 - Jan 2026</h3><ul class=space-y-1 text-sm opacity-90><li> New: Custom webhook endpoints</li><li> New: Advanced filtering with OR/AND operators</li><li> New: Metrics API for usage analytics</li><li> Fixed: Race condition in concurrent requests</li></ul></div>
-          <div class=border-l-4 border-yellow-500 pl-4><h3 class=text-lg font-bold text-yellow-500 mb-2>v2.3.0 - Dec 2025</h3><ul class=space-y-1 text-sm opacity-90><li> Deprecated: /v0/ endpoints (removed Feb 2026)</li><li> New: Batch transaction endpoint</li><li> Improved: Response time by 25%</li></ul></div>
-          <div class=border-l-4 border-red-500 pl-4><h3 class=text-lg font-bold text-red-500 mb-2>v2.2.0 - Nov 2025</h3><ul class=space-y-1 text-sm opacity-90><li> Breaking: Removed deprecated OAuth 1.0</li><li> New: OAuth 2.0 PKCE flow</li><li> Fixed: JWT token validation</li></ul></div>
-          <div class=p-4 bg-[rgba(34,197,94,0.1)] rounded-lg border border-[#22c55e33] mt-4><p class=text-sm><strong> Release Schedule:</strong> New versions released on the first Tuesday of each month</p></div>
-        </div>
-        <div class=sticky bottom-0 flex justify-end gap-3 p-6 border-t border-[#22c55e33] bg-[rgba(8,10,15,0.8)]>
-          <button onclick="closeChangelogModal()" class=px-6 py-2 rounded-full border border-[#22c55e] text-[#22c55e] font-medium hover:bg-[rgba(34,197,94,0.1)] transition-colors>Close</button>
-          <a href=https://github.com/phoenix28/api/releases target=_blank class=px-6 py-2 rounded-full bg-[#22c55e] text-black font-medium hover:bg-[#1aa347] transition-colors>Full Changelog</a>
-        </div>
-      </div>
-    </div>
-  </div>
- 
+  
+  
 
   <!-- Bottom Navigation - Mobile -->
   <nav class="bottom-nav" id="bottomNav">
@@ -1012,215 +856,82 @@ helm install phoenix28 phoenix28/deployment --namespace production --values valu
   </nav>
 
   <script>
-    // Lightweight documentation navigation
-    let currentSection = 'introduction';
-    const sideNav = document.getElementById('sideNav');
-    const sideNavToggle = document.getElementById('sideNavToggle');
-    const sideNavFab = document.getElementById('sideNavFab');
-    const docLinks = document.querySelectorAll('.doc-link');
-    const sideNavBtns = document.querySelectorAll('.side-nav-btn');
-    
-    function closeSideNav() {
-      sideNav.classList.add('hidden');
-    }
-    
-    function showSection(sectionId) {
-      if (currentSection === sectionId) return;
-      currentSection = sectionId;
+    // Documentation navigation functionality
+    function initDocNav() {
+      const docLinks = document.querySelectorAll('.doc-link');
+      const sideNavBtns = document.querySelectorAll('.side-nav-btn');
+      const sideNav = document.getElementById('sideNav');
+      const sideNavToggle = document.getElementById('sideNavToggle');
+      const sideNavFab = document.getElementById('sideNavFab');
+      const allNavElements = [...docLinks, ...sideNavBtns];
       
-      // Hide all sections
-      document.querySelectorAll('.doc-section').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      // Show selected section
-      const selectedSection = document.getElementById(sectionId);
-      if (selectedSection) {
-        selectedSection.classList.add('active');
-      }
-      
-      // Update active link styling
-      docLinks.forEach(link => link.classList.remove('active'));
-      sideNavBtns.forEach(btn => btn.classList.remove('active'));
-      
-      const activeLink = document.querySelector(`.doc-link[data-section="${sectionId}"]`);
-      const activeBtn = document.querySelector(`.side-nav-btn[data-section="${sectionId}"]`);
-      
-      if (activeLink) activeLink.classList.add('active');
-      if (activeBtn) activeBtn.classList.add('active');
-      
-      if (window.innerWidth <= 768) {
-        closeSideNav();
-      }
-    }
-    
-    // Event listeners
-    if (sideNavFab) {
-      sideNavFab.addEventListener('click', () => {
-        sideNav.classList.remove('hidden');
-      });
-    }
-    
-    if (sideNavToggle) {
-      sideNavToggle.addEventListener('click', closeSideNav);
-    }
-    
-    docLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        showSection(link.getAttribute('data-section'));
-      });
-    });
-    
-    sideNavBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        showSection(btn.getAttribute('data-section'));
-      });
-    });
-
-    // Quickstart Modal Functions
-    function openQuickstartModal() {
-      const modal = document.getElementById('quickstartModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    function closeQuickstartModal() {
-      const modal = document.getElementById('quickstartModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }
-    }
-
-    // Close modal when clicking outside
-    const modal = document.getElementById('quickstartModal');
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeQuickstartModal();
-        }
-      });
-    }
-
-    // Close modal with Escape key for quickstart
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeQuickstartModal();
-      }
-    });
-    // SDK Modal Functions
-    function openSDKModal() {
-      const modal = document.getElementById('sdkModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    function closeSDKModal() {
-      const modal = document.getElementById('sdkModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }
-    }
-
-    // Deployment Modal Functions
-    function openDeploymentModal() {
-      const modal = document.getElementById('deploymentModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    function closeDeploymentModal() {
-      const modal = document.getElementById('deploymentModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }
-    }
-
-    // Security Modal Functions
-    function openSecurityModal() {
-      const modal = document.getElementById('securityModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    function closeSecurityModal() {
-      const modal = document.getElementById('securityModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }
-    }
-
-    // Changelog Modal Functions
-    function openChangelogModal() {
-      const modal = document.getElementById('changelogModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-
-    function closeChangelogModal() {
-      const modal = document.getElementById('changelogModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }
-    }
-
-    // Close all modals on backdrop click
-    document.addEventListener('click', (e) => {
-      const modals = ['sdkModal', 'deploymentModal', 'securityModal', 'changelogModal'];
-      modals.forEach(modalId => {
-        const modal = document.getElementById(modalId);
-        if (e.target === modal) {
-          e.target.classList.add('hidden');
-          document.body.style.overflow = 'auto';
-        }
-      });
-    });
-
-    // Close modals with Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        ['sdkModal', 'deploymentModal', 'securityModal', 'changelogModal', 'quickstartModal'].forEach(modalId => {
-          const modal = document.getElementById(modalId);
-          if (modal && !modal.classList.contains('hidden')) {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-          }
+      // FAB button functionality - Open nav
+      if (sideNavFab) {
+        sideNavFab.addEventListener('click', function(e) {
+          e.preventDefault();
+          sideNav.classList.remove('hidden');
+          sideNav.classList.add('visible');
         });
       }
-    });
-
+      
+      // Toggle button inside nav - Close nav
+      if (sideNavToggle) {
+        sideNavToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          sideNav.classList.add('hidden');
+          sideNav.classList.remove('visible');
+        });
+      }
+      
+      // Navigation link functionality
+      allNavElements.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const sectionId = this.getAttribute('data-section');
+          if (!sectionId) return;
+          
+          // Hide all sections
+          const sections = document.querySelectorAll('.doc-section');
+          sections.forEach(section => {
+            section.classList.remove('active');
+          });
+          
+          // Show selected section
+          const selectedSection = document.getElementById(sectionId);
+          if (selectedSection) {
+            selectedSection.classList.add('active');
+          }
+          
+          // Update active link styling for desktop sidebar
+          docLinks.forEach(l => {
+            l.classList.remove('active');
+          });
+          const matchingDocLink = document.querySelector(`.doc-link[data-section="${sectionId}"]`);
+          if (matchingDocLink) {
+            matchingDocLink.classList.add('active');
+          }
+          
+          // Update active button styling for mobile side nav
+          sideNavBtns.forEach(btn => {
+            btn.classList.remove('active');
+          });
+          this.classList.add('active');
+          
+          // Close nav on mobile after selection
+          if (window.innerWidth <= 768) {
+            sideNav.classList.add('hidden');
+            sideNav.classList.remove('visible');
+          }
+          
+          // Scroll to top of main content smoothly
+          document.querySelector('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initDocNav);
   </script>
- 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

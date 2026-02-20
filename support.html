@@ -20,6 +20,14 @@
       background-color: var(--dark-bg);
       color: #e0e0e0;
     }
+    /* Hide scrollbars for all devices */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
     .ios-26-glass-dark {
       background: rgba(8, 10, 15, 0.7);
       backdrop-filter: blur(16px);
@@ -43,6 +51,12 @@
     }
     .faq-item.active .faq-answer {
       display: block;
+    }
+    nav a {
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      text-shadow: 0 0 10px #22c55e;
     }
     @keyframes pageIn {
       from { opacity: 0; transform: translateY(15px); }
@@ -106,9 +120,7 @@
           <span class="ml-2">Phoenix 28</span>
         </span>
       </a>
-      <nav class="flex gap-6 font-mono">
-        <a href="index.html" class="hover:text-[#22c55e] transition-colors" onclick="navigatePage(event)">← Back to Home</a>
-      </nav>
+      
     </div>
   </header>
 
@@ -127,7 +139,7 @@
       <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
         <i class="fas fa-phone text-4xl text-[#22c55e] mb-3"></i>
         <h3 class="text-xl font-bold">Emergency Line</h3>
-        <p class="text-sm opacity-70 mt-2">+1 (800) 555-0199</p>
+        <p class="text-sm opacity-70 mt-2">+254 (752) 953-500</p>
         <p class="text-xs opacity-50 mt-1">24/7 for critical issues</p>
       </div>
       <div class="ios-26-glass-dark p-6 rounded-3xl text-center">
@@ -211,15 +223,11 @@
         <div class="w-3 h-3 bg-[#22c55e] rounded-full pulse-glow"></div>
         <span>All systems operational</span>
       </div>
-      <a href="#" class="text-[#22c55e] text-sm">Status Page →</a>
+      <a href="status.html" onclick="navigatePage(event)" class="text-[#22c55e] text-sm">Status Page →</a>
     </div>
   </main>
 
-  <footer class="ios-26-glass-dark mt-10 py-8 relative z-20">
-    <div class="container mx-auto text-center">
-      <p>© 2026 Phoenix 28 Tech. <a href="index.html" class="text-[#22c55e] hover:underline" onclick="navigatePage(event)">Back to Home</a></p>
-    </div>
-  </footer>
+  
 
   <script>
     // Simple FAQ toggle

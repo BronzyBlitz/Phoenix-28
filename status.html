@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phoenix 28 Tech · System Status</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+    
+    :root {
+      --glass-bg: rgba(20, 20, 30, 0.6);
+      --glass-border: rgba(34, 197, 94, 0.25);
+      --neon-green: #22c55e;
+      --neon-blue: #0ea5e9;
+      --neon-purple: #a855f7;
+      --neon-glow: 0 0 10px #22c55e, 0 0 20px rgba(34, 197, 94, 0.3);
+      --dark-bg: #0a0a0f;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+      background-attachment: fixed;
+      color: #e0e0e0;
+      letter-spacing: 0.3px;
+    }
+    /* Hide scrollbars for all devices */
+    html, body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none;
+    }
+    .ios-26-glass-dark {
+      background: rgba(8, 10, 15, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(34,197,94,0.2);
+      box-shadow: var(--neon-glow);
+      border-radius: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+    nav a {
+      transition: all 0.3s ease;
+    }
+    nav a:hover {
+      text-shadow: 0 0 10px #22c55e;
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-15px); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes shimmer {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 20px 10px rgba(34, 197, 94, 0.1); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+    }
+    body.page-exit {
+      animation: pageOut 0.4s ease-in-out forwards;
+    }
+    body.page-enter {
+      animation: pageIn 0.4s ease-in-out forwards;
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .animate-slideInLeft {
+      animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .animate-slideInRight {
+      animation: slideInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    .glow-pulse {
+      animation: glow-pulse 2.5s ease-in-out infinite;
+    }
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s infinite;
+    }
+    .status-operational {
+      color: #22c55e;
+    }
+    .status-degraded {
+      color: #eab308;
+    }
+    .status-down {
+      color: #ef4444;
+    }
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .status-dot.operational {
+      background-color: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+    .status-dot.degraded {
+      background-color: #eab308;
+      box-shadow: 0 0 10px #eab308;
+    }
+    .status-dot.down {
+      background-color: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+    }
+    h1, h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+    }
+    p {
+      line-height: 1.6;
+    }
+    /* Better spacing utilities */
+    .space-relaxed { gap: 2rem !important; }
+    .space-tight { gap: 0.75rem !important; }
+    /* Bottom Navigation - Mobile Only */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 40px;
+      z-index: 50;
+      padding: 10px 6px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.3);
+      justify-content: space-around;
+    }
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      main { padding-bottom: 120px; }
+      .desktop-header { display: none; }
+    }
+    @media (min-width: 769px) {
+      .mobile-close-btn { display: none; }
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #22c55e;
+      text-decoration: none;
+      transition: 0.2s;
+      flex: 1 0 0;
+      padding: 6px 0;
+    }
+    .bottom-nav a i { font-size: 20px; margin-bottom: 4px; }
+    .bottom-nav a:hover { color: white; text-shadow: 0 0 10px #22c55e; }
+    .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
+    /* Status Card */
+    .status-card {
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .status-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    .status-card:hover::before {
+      left: 100%;
+    }
+    .status-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 10px 40px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+    .service-icon {
+      transition: all 0.3s ease;
+    }
+    .status-card:hover .service-icon {
+      transform: scale(1.15) rotate(5deg);
+      color: #0ea5e9;
+    }
+    /* Incident History */
+    .incident-item {
+      border-left: 4px solid #22c55e;
+      padding-left: 16px;
+      margin-bottom: 1.5rem;
+      transition: all 0.4s ease;
+      border-radius: 0 4px 4px 0;
+    }
+    .incident-item:hover {
+      padding-left: 20px;
+      border-left-color: #0ea5e9;
+    }
+    .incident-item.resolved {
+      border-left-color: #6b7280;
+      opacity: 0.65;
+    }
+    .incident-item.resolved:hover {
+      border-left-color: #22c55e;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Close Button -->
+  <button class="mobile-close-btn fixed top-6 right-6 z-40 text-[#22c55e] text-2xl" onclick="closeStatusPage()" title="Close">
+    <i class="fas fa-times-circle"></i>
+  </button>
+
+  <!-- Header - Desktop -->
+  <header class="desktop-header fixed top-5 left-5 right-5 z-30 ios-26-glass-dark" style="border-radius: 18px;">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="support.html" class="flex items-center gap-2" onclick="navigatePage(event)">
+        <span class="text-2xl font-bold tracking-tighter">
+          <span class="text-[#22c55e]">◈</span>
+          <span class="ml-2">Phoenix 28</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="relative z-10 container mx-auto px-4 pt-8 md:pt-32 pb-20">
+    <!-- Title -->
+    <div class="mb-12 md:mb-16 animate-fadeInUp">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4 glow-pulse">
+        <span class="text-[#22c55e]">◈</span> system status
+      </h1>
+      <p class="text-lg md:text-xl opacity-80 font-light tracking-wide">Real-time monitoring of Phoenix 28 infrastructure</p>
+      <div class="flex items-center gap-2 mt-4">
+        <div class="w-2 h-2 bg-[#22c55e] rounded-full pulse-glow"></div>
+        <span class="text-sm opacity-60">Live monitoring active</span>
+      </div>
+    </div>
+
+    <!-- Overall Status Card -->
+    <div class="ios-26-glass-dark p-8 md:p-12 rounded-3xl mb-12 md:mb-16 animate-fadeInUp" style="animation-delay: 0.1s;">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div class="md:col-span-2">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">System Health</h2>
+          <div class="flex items-center gap-4 mt-6">
+            <div class="w-5 h-5 bg-[#22c55e] rounded-full pulse-ring"></div>
+            <span class="text-2xl status-operational font-semibold">All Systems Operational</span>
+          </div>
+          <p class="text-sm opacity-60 mt-6">Last checked: <span id="lastUpdate" class="text-[#22c55e] font-mono">just now</span></p>
+          <p class="text-xs opacity-40 mt-2">Auto-refreshing every 30 seconds</p>
+        </div>
+        <div class="flex flex-col justify-center items-start md:items-end">
+          <div class="text-5xl md:text-6xl font-bold text-[#22c55e] font-mono">99.99%</div>
+          <p class="text-sm opacity-70 mt-3 font-light">Uptime (30 days)</p>
+          <div class="mt-4 pt-4 border-t border-[#22c55e]/20 w-full md:text-right">
+            <p class="text-xs opacity-60">Incidents: <span class="text-[#22c55e]">0</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services Status Grid -->
+    <div class="mb-16">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold">Service Status</h2>
+        <p class="text-xs opacity-50 hidden md:block">6 services monitored</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- API Service -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.2s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-plug text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">API Services</h3>
+                <p class="text-xs opacity-50">v2.4.1</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">Core API endpoints REST, GraphQL and gRPC protocols</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Response time:</span>
+              <span class="text-[#22c55e] font-mono">42ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Success rate:</span>
+              <span class="text-[#22c55e] font-mono">99.99%</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Requests/min:</span>
+              <span class="text-[#22c55e] font-mono">125.4K</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Database -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.3s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-database text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Database</h3>
+                <p class="text-xs opacity-50">PostgreSQL 15</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">Primary, replica and backup database clusters</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Query time:</span>
+              <span class="text-[#22c55e] font-mono">15ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Replication lag:</span>
+              <span class="text-[#22c55e] font-mono">0.3ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Connections:</span>
+              <span class="text-[#22c55e] font-mono">1,247 active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Authentication -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.4s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-lock text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Authentication</h3>
+                <p class="text-xs opacity-50">OAuth 2.0, JWT</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">OAuth, API keys, JWT and session management</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Auth requests:</span>
+              <span class="text-[#22c55e] font-mono">99.99%</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Avg latency:</span>
+              <span class="text-[#22c55e] font-mono">28ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Active sessions:</span>
+              <span class="text-[#22c55e] font-mono">89.2K</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CDN & Storage -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.5s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-cloud text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">CDN & Storage</h3>
+                <p class="text-xs opacity-50">CloudFlare + S3</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">Global CDN and distributed file storage</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Cache hit rate:</span>
+              <span class="text-[#22c55e] font-mono">98.5%</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Avg latency:</span>
+              <span class="text-[#22c55e] font-mono">12ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Stored objects:</span>
+              <span class="text-[#22c55e] font-mono">2.4M</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Webhooks -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.6s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-code-branch text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Webhooks</h3>
+                <p class="text-xs opacity-50">Event delivery</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">Asynchronous event delivery and retries</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Delivered:</span>
+              <span class="text-[#22c55e] font-mono">100%</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Avg latency:</span>
+              <span class="text-[#22c55e] font-mono">245ms</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Queue depth:</span>
+              <span class="text-[#22c55e] font-mono">342 pending</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monitoring -->
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl animate-fadeInUp" style="animation-delay: 0.7s;">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-[#22c55e]/10 rounded-lg flex items-center justify-center service-icon">
+                <i class="fas fa-tachometer-alt text-[#22c55e] text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Monitoring</h3>
+                <p class="text-xs opacity-50">Prometheus + Grafana</p>
+              </div>
+            </div>
+            <span class="status-dot operational pulse-glow"></span>
+          </div>
+          <p class="text-sm opacity-75 mb-4 leading-relaxed">Real-time monitoring and alerting system</p>
+          <div class="space-y-2 bg-black/30 p-4 rounded-lg">
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Alert latency:</span>
+              <span class="text-[#22c55e] font-mono">45s avg</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Metrics/sec:</span>
+              <span class="text-[#22c55e] font-mono">14.2K</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="opacity-60">Dashboards:</span>
+              <span class="text-[#22c55e] font-mono">127 active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regional Status -->
+    <div class="mb-16">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold">Regional Status</h2>
+        <p class="text-xs opacity-50 hidden md:block">4 regions monitored</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.3s;">
+          <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="status-dot operational pulse-glow"></span>
+            <h3 class="font-bold text-lg">US East</h3>
+          </div>
+          <p class="text-sm opacity-70 mb-4">New York & Virginia</p>
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="text-2xl font-bold text-[#22c55e] font-mono">99.99%</div>
+            <p class="text-xs opacity-60 mt-1">Uptime SLA</p>
+          </div>
+          <p class="text-xs opacity-50">Latency: <span class="text-[#22c55e] font-mono">12ms avg</span></p>
+        </div>
+
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.4s;">
+          <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="status-dot operational pulse-glow"></span>
+            <h3 class="font-bold text-lg">US West</h3>
+          </div>
+          <p class="text-sm opacity-70 mb-4">California & Oregon</p>
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="text-2xl font-bold text-[#22c55e] font-mono">99.99%</div>
+            <p class="text-xs opacity-60 mt-1">Uptime SLA</p>
+          </div>
+          <p class="text-xs opacity-50">Latency: <span class="text-[#22c55e] font-mono">18ms avg</span></p>
+        </div>
+
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+          <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="status-dot operational pulse-glow"></span>
+            <h3 class="font-bold text-lg">Europe</h3>
+          </div>
+          <p class="text-sm opacity-70 mb-4">Frankfurt & London</p>
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="text-2xl font-bold text-[#22c55e] font-mono">99.98%</div>
+            <p class="text-xs opacity-60 mt-1">Uptime SLA</p>
+          </div>
+          <p class="text-xs opacity-50">Latency: <span class="text-[#22c55e] font-mono">22ms avg</span></p>
+        </div>
+
+        <div class="status-card ios-26-glass-dark p-7 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.6s;">
+          <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="status-dot operational pulse-glow"></span>
+            <h3 class="font-bold text-lg">Asia-Pac</h3>
+          </div>
+          <p class="text-sm opacity-70 mb-4">Tokyo & Singapore</p>
+          <div class="bg-black/30 p-4 rounded-lg mb-4">
+            <div class="text-2xl font-bold text-[#22c55e] font-mono">99.97%</div>
+            <p class="text-xs opacity-60 mt-1">Uptime SLA</p>
+          </div>
+          <p class="text-xs opacity-50">Latency: <span class="text-[#22c55e] font-mono">35ms avg</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Incidents -->
+    <div class="mb-16">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold">Incident History</h2>
+        <p class="text-xs opacity-50 hidden md:block">Last 90 days</p>
+      </div>
+      <div class="ios-26-glass-dark p-8 md:p-10 rounded-3xl animate-fadeInUp" style="animation-delay: 0.4s;">
+        <div class="space-y-8">
+          <!-- Resolved Incident -->
+          <div class="incident-item resolved">
+            <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
+              <div>
+                <h3 class="font-bold text-lg">Database maintenance window completed</h3>
+                <p class="text-sm opacity-75 mt-1">Scheduled maintenance on primary database cluster completed successfully without any service disruptions</p>
+              </div>
+              <span class="text-xs bg-green-500/20 text-green-400 px-4 py-2 rounded-full whitespace-nowrap font-semibold">✓ RESOLVED</span>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 text-xs opacity-50 mt-4 pt-4 border-t border-[#22c55e]/10">
+              <span>📅 February 15, 2026</span>
+              <span>⏱️ 2:30 AM - 3:15 AM EST (45 min)</span>
+              <span>🔧 Type: Maintenance</span>
+            </div>
+          </div>
+
+          <!-- Resolved Incident -->
+          <div class="incident-item resolved">
+            <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
+              <div>
+                <h3 class="font-bold text-lg">API latency spike resolved</h3>
+                <p class="text-sm opacity-75 mt-1">Brief latency increase identified due to traffic spike. Auto-scaling engaged and issue resolved within 20 minutes</p>
+              </div>
+              <span class="text-xs bg-green-500/20 text-green-400 px-4 py-2 rounded-full whitespace-nowrap font-semibold">✓ RESOLVED</span>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 text-xs opacity-50 mt-4 pt-4 border-t border-[#22c55e]/10">
+              <span>📅 February 10, 2026</span>
+              <span>⏱️ 11:45 PM - 12:05 AM EST (20 min)</span>
+              <span>🔧 Type: Performance</span>
+            </div>
+          </div>
+
+          <!-- Resolved Incident -->
+          <div class="incident-item resolved">
+            <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
+              <div>
+                <h3 class="font-bold text-lg">CDN edge server redeployment</h3>
+                <p class="text-sm opacity-75 mt-1">Rolling deployment of updated CDN edge servers completed. Improved cache efficiency by 2.3%</p>
+              </div>
+              <span class="text-xs bg-green-500/20 text-green-400 px-4 py-2 rounded-full whitespace-nowrap font-semibold">✓ RESOLVED</span>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 text-xs opacity-50 mt-4 pt-4 border-t border-[#22c55e]/10">
+              <span>📅 February 5, 2026</span>
+              <span>⏱️ 1:00 AM - 4:00 AM EST (3 hours)</span>
+              <span>🔧 Type: Infrastructure Update</span>
+            </div>
+          </div>
+
+          <div class="border-t border-[#22c55e]/20 pt-6 mt-6">
+            <div class="flex items-center gap-3">
+              <div class="w-3 h-3 bg-[#22c55e] rounded-full"></div>
+              <p class="text-sm opacity-70">No active incidents • All systems operating at full capacity</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics Dashboard -->
+    <div class="mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-8">Key Metrics (Last 24 Hours)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="status-card ios-26-glass-dark p-8 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.3s;">
+          <div class="mb-4">
+            <i class="fas fa-tachometer-alt text-3xl text-[#22c55e]"></i>
+          </div>
+          <div class="text-3xl md:text-5xl font-bold text-[#22c55e] mb-2 font-mono">47ms</div>
+          <p class="text-sm opacity-70 mb-1 font-semibold">Average Response Time</p>
+          <p class="text-xs opacity-50">Across all services globally</p>
+          <div class="mt-4 pt-4 border-t border-[#22c55e]/20">
+            <span class="text-xs opacity-50">Peak: <span class="text-[#22c55e]">156ms</span> • Min: <span class="text-[#22c55e]">8ms</span></span>
+          </div>
+        </div>
+
+        <div class="status-card ios-26-glass-dark p-8 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.4s;">
+          <div class="mb-4">
+            <i class="fas fa-check-circle text-3xl text-[#22c55e]"></i>
+          </div>
+          <div class="text-3xl md:text-5xl font-bold text-[#22c55e] mb-2 font-mono">0</div>
+          <p class="text-sm opacity-70 mb-1 font-semibold">Active Incidents</p>
+          <p class="text-xs opacity-50">All systems healthy and running</p>
+          <div class="mt-4 pt-4 border-t border-[#22c55e]/20">
+            <span class="text-xs opacity-50">Status: <span class="text-[#22c55e] font-semibold">✓ Normal</span></span>
+          </div>
+        </div>
+
+        <div class="status-card ios-26-glass-dark p-8 rounded-2xl text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+          <div class="mb-4">
+            <i class="fas fa-arrow-up text-3xl text-[#22c55e]"></i>
+          </div>
+          <div class="text-3xl md:text-5xl font-bold text-[#22c55e] mb-2 font-mono">12.4M</div>
+          <p class="text-sm opacity-70 mb-1 font-semibold">Requests Processed</p>
+          <p class="text-xs opacity-50">In the last 24 hours</p>
+          <div class="mt-4 pt-4 border-t border-[#22c55e]/20">
+            <span class="text-xs opacity-50">Rate: <span class="text-[#22c55e] font-mono">143.5K/min avg</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subscribe Section -->
+    <div class="ios-26-glass-dark p-10 md:p-12 rounded-3xl mb-8 animate-fadeInUp" style="animation-delay: 0.6s;">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Get Status Updates</h2>
+          <p class="text-sm md:text-base opacity-75 leading-relaxed mb-2">Subscribe to receive real-time notifications about service incidents, maintenance windows, and important infrastructure updates</p>
+          <p class="text-xs opacity-50">📧 Email delivered within seconds</p>
+        </div>
+        <div class="flex flex-col justify-center">
+          <div class="flex flex-col md:flex-row gap-3">
+            <input type="email" placeholder="name@company.com" class="flex-1 bg-black/40 border border-[#22c55e] p-4 rounded-xl text-sm placeholder-opacity-50 focus:outline-none focus:border-[#0ea5e9] focus:ring-2 focus:ring-[#22c55e]/20 transition">
+            <button class="bg-[#22c55e] text-black px-8 py-4 rounded-full font-bold text-sm whitespace-nowrap hover:bg-[#16a34a] transition-all hover:shadow-lg hover:shadow-[#22c55e]/50">Subscribe</button>
+          </div>
+          <p class="text-xs opacity-40 mt-3">We respect your privacy. No spam, ever.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation - Mobile -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" onclick="navigatePage(event)"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="blog.html" onclick="navigatePage(event)"><i class="fas fa-newspaper"></i><span>Blog</span></a>
+    <a href="documentation.html" onclick="navigatePage(event)"><i class="fas fa-book"></i><span>Docs</span></a>
+    <a href="whitepapers.html" onclick="navigatePage(event)"><i class="fas fa-file-pdf"></i><span>Papers</span></a>
+    <a href="press.html" onclick="navigatePage(event)"><i class="fas fa-microphone"></i><span>Press</span></a>
+    <a href="support.html" onclick="navigatePage(event)"><i class="fas fa-headset"></i><span>Support</span></a>
+  </nav>
+
+  <script>
+    // Close status page on mobile
+    function closeStatusPage() {
+      document.body.classList.add('page-exit');
+      setTimeout(() => {
+        window.history.back();
+      }, 400);
+    }
+
+    // Update last updated time
+    function updateLastUpdate() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      document.getElementById('lastUpdate').textContent = 'at ' + timeString;
+    }
+
+   
+
+    // Handle navigation
+    function navigatePage(event) {
+      if (event && event.target.closest('a').href !== '#') {
+        event.preventDefault();
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+          window.location.href = event.target.closest('a').href;
+        }, 200);
+      }
+    }
+
+    // Mobile detection for bottom nav
+    function setActiveNav() {
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.bottom-nav a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    setActiveNav();
+  </script>
+</body>
+</html>
