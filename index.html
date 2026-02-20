@@ -142,6 +142,111 @@
     .bottom-nav a i { font-size: 20px; }
     .bottom-nav a.active { color: white; text-shadow: 0 0 10px #22c55e; }
 
+    /* Right Sidebar Navigation - Desktop Only */
+    @keyframes sidebarZoomIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.3);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+    }
+    @keyframes itemZoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes itemPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+      }
+    }
+    @keyframes iconFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+    .right-sidebar {
+      display: none;
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 20px;
+      z-index: 45;
+      padding: 12px 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(34, 197, 94, 0.3);
+      flex-direction: column;
+      gap: 6px;
+      animation: sidebarZoomIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @media (min-width: 769px) {
+      .right-sidebar { display: flex; }
+    }
+    .right-sidebar a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #22c55e;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: 10px 8px;
+      border-radius: 12px;
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 1.2;
+      animation: itemZoomIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .right-sidebar a:nth-child(1) { animation-delay: 0.1s; }
+    .right-sidebar a:nth-child(2) { animation-delay: 0.15s; }
+    .right-sidebar a:nth-child(3) { animation-delay: 0.2s; }
+    .right-sidebar a:nth-child(4) { animation-delay: 0.25s; }
+    .right-sidebar a:nth-child(5) { animation-delay: 0.3s; }
+    .right-sidebar a:nth-child(6) { animation-delay: 0.35s; }
+    .right-sidebar a:nth-child(7) { animation-delay: 0.4s; }
+    .right-sidebar a:nth-child(8) { animation-delay: 0.45s; }
+    .right-sidebar a i {
+      font-size: 22px;
+      margin-bottom: 3px;
+      transition: all 0.3s ease;
+    }
+    .right-sidebar a:hover {
+      color: white;
+      text-shadow: 0 0 10px #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+      transform: scale(1.1);
+      animation: itemPulse 1s ease-in-out;
+    }
+    .right-sidebar a:hover i {
+      animation: iconFloat 0.6s ease-in-out infinite;
+    }
+    .right-sidebar a.active {
+      color: white;
+      text-shadow: 0 0 10px #22c55e;
+      background: rgba(34, 197, 94, 0.25);
+    }
+
     /* Header now has curved bottom on mobile like bottom nav */
     header {
       transition: border-radius 0.3s;
@@ -333,6 +438,123 @@
       transform: scale(1.1);
       box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5);
     }
+    /* Portfolio Floating Button - Enhanced */
+    #portfolioToggle {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4), 0 0 25px rgba(34, 197, 94, 0.2);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 140;
+      border: none;
+      cursor: pointer;
+      color: black;
+      font-size: 24px;
+      border-radius: 50%;
+      outline: none;
+      overflow: hidden;
+    }
+    #portfolioToggle i {
+      transition: all 0.4s ease;
+    }
+    #portfolioToggle:hover {
+      transform: scale(1.15) translateY(-5px);
+      box-shadow: 0 14px 35px rgba(34, 197, 94, 0.5), 0 0 30px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, #2fd64d, #22c55e);
+    }
+    #portfolioToggle:active {
+      transform: scale(0.95);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    #portfolioToggle:hover i {
+      animation: portfolioIconBounce 0.6s ease-in-out infinite;
+      transform: rotate(10deg);
+    }
+    @keyframes portfolioIconBounce {
+      0%, 100% { transform: translateY(0) rotate(10deg); }
+      50% { transform: translateY(-6px) rotate(10deg); }
+    }
+    #portfolioToggle::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    #portfolioToggle:hover::before {
+      opacity: 1;
+    }
+    #portfolioToggle::after {
+      content: 'View Portfolio';
+      position: absolute;
+      left: -120px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(34, 197, 94, 0.95);
+      color: black;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease, left 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+      letter-spacing: 0.5px;
+    }
+    #portfolioToggle::after::before {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid rgba(34, 197, 94, 0.95);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+    #portfolioToggle:hover::after {
+      opacity: 1;
+      left: -140px;
+    }
+    /* Mobile responsive portfolio button */
+    @media (max-width: 640px) {
+      #portfolioToggle {
+        bottom: 24px;
+        left: 12px;
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+      }
+      #portfolioToggle::after {
+        display: none;
+      }
+    }
+    @media (max-width: 480px) {
+      #portfolioToggle {
+        bottom: 20px;
+        left: 10px;
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+      #portfolioToggle::after {
+        display: none;
+      }
+    }
     /* AI Message Links & Actions */
     #aiMessages a {
       color: #22c55e;
@@ -362,6 +584,10 @@
     }
     .animate-pulse {
       animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes rippleEffect {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
     }
     @media (max-width: 640px) {
       .ai-panel {
@@ -423,6 +649,18 @@
   <!-- fixed backgrounds -->
   <canvas id="matrix-canvas"></canvas>
   <div class="scanlines"></div>
+
+  <!-- Right Sidebar Navigation - Desktop Only -->
+  <nav class="right-sidebar" id="rightSidebar">
+    <a href="index.html" class="active" title="Home"><i class="fas fa-home"></i><span>home</span></a>
+    <a href="blog.html" title="Blog"><i class="fas fa-newspaper"></i><span>blog</span></a>
+    <a href="documentation.html" title="Docs"><i class="fas fa-book"></i><span>docs</span></a>
+    <a href="whitepapers.html" title="Papers"><i class="fas fa-file-pdf"></i><span>papers</span></a>
+    <a href="press.html" title="Press"><i class="fas fa-microphone"></i><span>press</span></a>
+    <a href="support.html" title="Support"><i class="fas fa-headset"></i><span>support</span></a>
+    <a href="status.html" title="Status"><i class="fas fa-heartbeat"></i><span>status</span></a>
+    <a href="https://bronzyblitz.github.io/official-portfolio/" target="_blank" title="Portfolio"><i class="fas fa-briefcase"></i><span>portfolio</span></a>
+  </nav>
 
   <!-- bottom nav UPGRADED: 7 items, fully responsive -->
   <div class="bottom-nav" id="bottomNav">
@@ -823,6 +1061,9 @@
       <button id="aiSend" class="bg-[#22c55e] text-black px-4 rounded-r-xl">send</button>
     </div>
   </div>
+  <!-- Portfolio Floating Button -->
+  <button id="portfolioToggle" title="View My Portfolio"><i class="fas fa-briefcase"></i></button>
+  <!-- AI Assistant Toggle Button -->
   <button id="aiToggle" class="fixed bottom-20 right-4 bg-[#22c55e] text-black p-4 rounded-full shadow-2xl z-[150]"><i class="fas fa-robot text-xl"></i></button>
 
   <script>
@@ -912,6 +1153,37 @@
       }
       document.getElementById('fontIncrease')?.addEventListener('click', () => adjustFont(1));
       document.getElementById('fontDecrease')?.addEventListener('click', () => adjustFont(-1));
+
+      // ------ Portfolio button functionality ------
+      const portfolioToggle = document.getElementById('portfolioToggle');
+      if (portfolioToggle) {
+        portfolioToggle.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.open('https://bronzyblitz.github.io/official-portfolio/', '_blank');
+        });
+        // Add smooth ripple effect on click
+        portfolioToggle.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+          ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            left: ${x}px;
+            top: ${y}px;
+            pointer-events: none;
+            animation: rippleEffect 0.6s ease-out;
+            overflow: hidden;
+          `;
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+        });
+      }
 
       // ------ AI assistant (enhanced) ------
       const aiPanel = document.getElementById('aiPanel');

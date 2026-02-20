@@ -198,6 +198,111 @@
       color: white; 
       text-shadow: 0 0 10px #22c55e; 
     }
+    
+    /* Right Sidebar Navigation - Desktop Only */
+    @keyframes sidebarZoomIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.3);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+    }
+    @keyframes itemZoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes itemPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+      }
+    }
+    @keyframes iconFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-3px);
+      }
+    }
+    .right-sidebar {
+      display: none;
+      position: fixed;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 20px;
+      z-index: 45;
+      padding: 12px 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(34, 197, 94, 0.3);
+      flex-direction: column;
+      gap: 6px;
+      animation: sidebarZoomIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @media (min-width: 769px) {
+      .right-sidebar { display: flex; }
+    }
+    .right-sidebar a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #22c55e;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: 10px 8px;
+      border-radius: 12px;
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 1.2;
+      animation: itemZoomIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .right-sidebar a:nth-child(1) { animation-delay: 0.1s; }
+    .right-sidebar a:nth-child(2) { animation-delay: 0.15s; }
+    .right-sidebar a:nth-child(3) { animation-delay: 0.2s; }
+    .right-sidebar a:nth-child(4) { animation-delay: 0.25s; }
+    .right-sidebar a:nth-child(5) { animation-delay: 0.3s; }
+    .right-sidebar a:nth-child(6) { animation-delay: 0.35s; }
+    .right-sidebar a:nth-child(7) { animation-delay: 0.4s; }
+    .right-sidebar a i {
+      font-size: 22px;
+      margin-bottom: 3px;
+      transition: all 0.3s ease;
+    }
+    .right-sidebar a:hover {
+      color: white;
+      text-shadow: 0 0 10px #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+      transform: scale(1.1);
+      animation: itemPulse 1s ease-in-out;
+    }
+    .right-sidebar a:hover i {
+      animation: iconFloat 0.6s ease-in-out infinite;
+    }
+    .right-sidebar a.active {
+      color: white;
+      text-shadow: 0 0 10px #22c55e;
+      background: rgba(34, 197, 94, 0.25);
+    }
+    
     /* Section visibility */
     .doc-section {
       display: none;
@@ -1000,6 +1105,17 @@ helm install phoenix28 phoenix28/deployment --namespace production --values valu
     </div>
   </div>
  
+
+  <!-- Right Sidebar Navigation - Desktop Only -->
+  <nav class="right-sidebar" id="rightSidebar">
+    <a href="index.html" onclick="navigatePage(event)" title="Home"><i class="fas fa-home"></i><span>home</span></a>
+    <a href="blog.html" onclick="navigatePage(event)" title="Blog"><i class="fas fa-newspaper"></i><span>blog</span></a>
+    <a href="documentation.html" class="active" onclick="navigatePage(event)" title="Docs"><i class="fas fa-book"></i><span>docs</span></a>
+    <a href="whitepapers.html" onclick="navigatePage(event)" title="Papers"><i class="fas fa-file-pdf"></i><span>papers</span></a>
+    <a href="press.html" onclick="navigatePage(event)" title="Press"><i class="fas fa-microphone"></i><span>press</span></a>
+    <a href="support.html" onclick="navigatePage(event)" title="Support"><i class="fas fa-headset"></i><span>support</span></a>
+    <a href="status.html" onclick="navigatePage(event)" title="Status"><i class="fas fa-heartbeat"></i><span>status</span></a>
+  </nav>
 
   <!-- Bottom Navigation - Mobile -->
   <nav class="bottom-nav" id="bottomNav">
