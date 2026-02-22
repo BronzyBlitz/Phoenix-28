@@ -106,12 +106,91 @@
       vertical-align: middle; margin-left: 4px; animation: blink 1s infinite;
     }
     @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    /* Liquid Glass Card Styles */
+    .liquid-glass-card {
+      background: rgba(8, 10, 15, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(34, 197, 94, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .liquid-glass-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+      animation: liquidShimmer 4s infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes liquidShimmer {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(10%, 10%) rotate(180deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    
+    .liquid-glass-card:hover {
+      background: rgba(8, 10, 15, 0.6);
+      border-color: rgba(34, 197, 94, 0.6);
+      box-shadow: 0 15px 50px rgba(34, 197, 94, 0.2), inset 0 1px 1px rgba(34, 197, 94, 0.2);
+      transform: scale(1.05) translateY(-8px);
+    }
+    
+    /* Icon Animations */
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .animate-bounce-slow {
+      animation: bounce-slow 2s infinite;
+    }
+    
+    .animate-spin-slow {
+      animation: spin-slow 3s linear infinite;
+    }
+    
+    .group:hover .animate-spin-slow {
+      animation-duration: 1.5s;
+    }
+    
+    /* Progress Bar Animations */
+    @keyframes skillFill {
+      from { width: 0; }
+      to { width: var(--fill-width, 100%); }
+    }
+    
+    .skill-bar {
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+      filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.4));
+    }
+    
+    .group:hover .skill-bar {
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6));
+    }
+    
     /* cards hover */
     .service-card, .team-card {
+      transition: all 0.3s ease;
+    }
+    .team-card {
       transition: all 0.2s ease;
     }
-    .service-card:hover, .team-card:hover {
-      transform: scale(1.02) translateY(-5px);
+    .team-card:hover {
+      transform: scale(1.05) translateY(-5px);
       box-shadow: var(--neon-glow);
     }
     /* bottom nav upgraded: iOS 28 liquid glass + curve — now with 7 items */
@@ -430,13 +509,49 @@
       cursor: not-allowed;
     }
     #aiToggle {
+      position: fixed;
+      bottom: 5rem;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: linear-gradient(135deg, #22c55e, #18a34a);
       box-shadow: 0 8px 20px rgba(34, 197, 94, 0.3);
       transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 150;
     }
     #aiToggle:hover {
       transform: scale(1.1);
       box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5);
+    }
+    @media (max-width: 768px) {
+      #aiToggle {
+        bottom: 100px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+      }
+    }
+    @media (max-width: 640px) {
+      #aiToggle {
+        bottom: 100px;
+        right: 12px;
+        width: 52px;
+        height: 52px;
+      }
+    }
+    @media (max-width: 480px) {
+      #aiToggle {
+        bottom: 100px;
+        right: 10px;
+        width: 48px;
+        height: 48px;
+      }
     }
     /* Portfolio Floating Button - Enhanced */
     #portfolioToggle {
@@ -444,7 +559,7 @@
       box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4), 0 0 25px rgba(34, 197, 94, 0.2);
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: fixed;
-      bottom: 20px;
+      bottom: 5rem;
       left: 16px;
       width: 56px;
       height: 56px;
@@ -531,9 +646,21 @@
       left: -140px;
     }
     /* Mobile responsive portfolio button */
+    @media (max-width: 768px) {
+      #portfolioToggle {
+        bottom: 100px;
+        left: 16px;
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+      }
+      #portfolioToggle::after {
+        display: none;
+      }
+    }
     @media (max-width: 640px) {
       #portfolioToggle {
-        bottom: 24px;
+        bottom: 100px;
         left: 12px;
         width: 52px;
         height: 52px;
@@ -545,7 +672,7 @@
     }
     @media (max-width: 480px) {
       #portfolioToggle {
-        bottom: 20px;
+        bottom: 100px;
         left: 10px;
         width: 48px;
         height: 48px;
@@ -659,7 +786,6 @@
     <a href="press.html" title="Press"><i class="fas fa-microphone"></i><span>press</span></a>
     <a href="support.html" title="Support"><i class="fas fa-headset"></i><span>support</span></a>
     <a href="status.html" title="Status"><i class="fas fa-heartbeat"></i><span>status</span></a>
-    <a href="https://bronzyblitz.github.io/official-portfolio/" target="_blank" title="Portfolio"><i class="fas fa-briefcase"></i><span>portfolio</span></a>
   </nav>
 
   <!-- bottom nav UPGRADED: 7 items, fully responsive -->
@@ -683,14 +809,35 @@
           <span class="text-xs sm:text-sm align-middle bg-[#22c55e] text-black px-2 py-0.5 rounded-full hidden sm:inline-block ml-3">v2.0</span>
         </span>
       </div>
-      <nav class="desktop-nav hidden md:flex gap-8 font-mono">
-        <a href="#home" class="hover:text-[#22c55e] transition-colors">Home</a>
-        <a href="#about" class="hover:text-[#22c55e]">About</a>
-        <a href="#services" class="hover:text-[#22c55e]">Services</a>
-        <a href="#projects" class="hover:text-[#22c55e]">Projects</a>
-        <a href="#demos" class="hover:text-[#22c55e]">Demos</a>
-        <a href="#team" class="hover:text-[#22c55e]">Team</a>
-        <a href="#contact" class="hover:text-[#22c55e]">Contact</a>
+      <nav class="desktop-nav hidden md:flex gap-3 items-center">
+        <a href="#home" class="nav-link-icon group" title="Home">
+          <i class="fas fa-home"></i>
+          <span class="nav-label">Home</span>
+        </a>
+        <a href="#about" class="nav-link-icon group" title="About">
+          <i class="fas fa-users"></i>
+          <span class="nav-label">About</span>
+        </a>
+        <a href="#services" class="nav-link-icon group" title="Services">
+          <i class="fas fa-shield-halved"></i>
+          <span class="nav-label">Services</span>
+        </a>
+        <a href="#projects" class="nav-link-icon group" title="Projects">
+          <i class="fas fa-code-branch"></i>
+          <span class="nav-label">Projects</span>
+        </a>
+        <a href="#demos" class="nav-link-icon group" title="Demos">
+          <i class="fas fa-flask"></i>
+          <span class="nav-label">Demos</span>
+        </a>
+        <a href="#team" class="nav-link-icon group" title="Team">
+          <i class="fas fa-user-tie"></i>
+          <span class="nav-label">Team</span>
+        </a>
+        <a href="#contact" class="nav-link-icon group" title="Contact">
+          <i class="fas fa-envelope"></i>
+          <span class="nav-label">Contact</span>
+        </a>
       </nav>
     </div>
   </header>
@@ -710,8 +857,21 @@
           </div>
           <p class="text-gray-300 light:text-gray-700 max-w-lg text-lg mb-8"><i class="fas fa-shield-halved text-[#22c55e] mr-2"></i>We build AI, cloud & blockchain solutions that are scalable, secure, and ahead of the curve.</p>
           <div class="flex flex-wrap gap-4">
-            <a href="#projects" class="bg-[#22c55e] text-black px-8 py-3 rounded-full font-bold text-lg shadow-lg flex items-center gap-2">View Our Work <i class="fas fa-arrow-right"></i></a>
-            <a href="#contact" class="border border-[#22c55e] px-8 py-3 rounded-full font-bold text-[#22c55e] text-lg">Contact Us</a>
+            <a href="#projects"
+               class="relative inline-flex items-center gap-2 px-8 py-3 text-lg font-bold text-black bg-[#22c55e] rounded-full shadow-lg
+                      transform transition duration-300 ease-out hover:scale-105 hover:shadow-2xl focus:outline-none
+                      overflow-hidden">
+              <i class="fas fa-briefcase fa-lg animate-pulse"></i>
+              View Our Work
+              <span class="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity"></span>
+            </a>
+            <a href="#contact"
+               class="relative inline-flex items-center gap-2 px-8 py-3 text-lg font-bold text-[#22c55e] border border-[#22c55e] rounded-full
+                      transform transition duration-300 ease-out hover:scale-105 hover:bg-[#22c55e]/10 focus:outline-none">
+              <i class="fas fa-paper-plane fa-lg"></i>
+              Contact Us
+              <span class="absolute -right-2 -top-2 w-3 h-3 bg-[#22c55e] rounded-full animate-ping"></span>
+            </a>
           </div>
           <!-- terminal widget -->
           <div class="ios-26-glass-dark p-5 mt-10 font-mono text-sm max-w-md">
@@ -738,14 +898,37 @@
     <section id="about" class="my-28">
       <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> about</h2>
       <div class="grid lg:grid-cols-2 gap-8">
-        <div class="ios-26-glass-dark p-8 rounded-3xl reveal-on-scroll">
-          <h3 class="text-2xl mb-4">Mission & Values</h3>
-          <p class="mb-4">Founded by <strong class="text-[#22c55e]">Pius Maina</strong> (see his <a href="#" class="underline">personal portfolio</a>), Phoenix 28 Tech delivers next‑gen tech with integrity. We merge AI, zero‑trust security, and elegant engineering.</p>
-          <div class="grid grid-cols-2 gap-4 mt-6">
-            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="5">0</span><br>Years</div>
-            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="47">0</span><br>Projects</div>
-            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="100">0</span>%<br>Satisfaction</div>
-            <div class="border-l-2 border-[#22c55e] pl-3"><span class="stat-number text-3xl text-[#22c55e] stat-counter" data-target="12">0</span><br>Countries</div>
+        <div class="ios-26-glass-dark p-8 rounded-3xl reveal-on-scroll backdrop-blur-xl bg-gradient-to-br from-[#22c55e]/10 via-transparent to-[#22c55e]/5 border border-[#22c55e]/40 hover:border-[#22c55e]/70 transition-all duration-500 group">
+          <h3 class="text-2xl mb-6 flex items-center gap-3">
+            <i class="fas fa-compass text-[#22c55e] animate-spin-slow group-hover:text-white transition-colors duration-300"></i>
+            <span class="bg-gradient-to-r from-white to-[#22c55e] bg-clip-text text-transparent">Mission & Values</span>
+          </h3>
+          <p class="mb-6 leading-relaxed text-gray-300 group-hover:text-gray-100 transition-colors duration-300">
+            Founded by <strong class="text-[#22c55e] group-hover:text-white transition-colors duration-300">Pius Maina</strong> 
+            (see his <a href="https://bronzyblitz.github.io/official-portfolio/" target="_blank" class="underline hover:text-[#22c55e] transition-colors duration-300 hover:shadow-lg hover:shadow-[#22c55e]/30 px-1 rounded font-semibold">personal portfolio ↗</a>), 
+            Phoenix 28 Tech delivers next‑gen tech with integrity. We merge <span class="text-[#22c55e]">AI</span>, <span class="text-[#22c55e]">zero‑trust security</span>, and <span class="text-[#22c55e]">elegant engineering</span>.
+          </p>
+          <div class="grid grid-cols-2 gap-4 mt-8">
+            <div class="group/stat relative border-l-4 border-[#22c55e] pl-4 py-3 rounded-r-lg bg-gradient-to-r from-[#22c55e]/15 to-transparent hover:from-[#22c55e]/25 transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-[#22c55e]/30 transform cursor-default">
+              <i class="fas fa-clock text-[#22c55e] mb-2 inline-block group-hover/stat:animate-pulse group-hover/stat:text-white transition-all duration-300"></i>
+              <div class="mt-2"><span class="stat-number text-4xl font-bold text-[#22c55e] group-hover/stat:text-white stat-counter transition-colors duration-300" data-target="5">0</span></div>
+              <div class="text-xs text-gray-400 group-hover/stat:text-[#22c55e] mt-1 font-mono transition-colors duration-300">Years Active</div>
+            </div>
+            <div class="group/stat relative border-l-4 border-[#22c55e] pl-4 py-3 rounded-r-lg bg-gradient-to-r from-[#22c55e]/15 to-transparent hover:from-[#22c55e]/25 transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-[#22c55e]/30 transform cursor-default">
+              <i class="fas fa-briefcase text-[#22c55e] mb-2 inline-block group-hover/stat:animate-bounce group-hover/stat:text-white transition-all duration-300" style="animation-delay: 0.1s;"></i>
+              <div class="mt-2"><span class="stat-number text-4xl font-bold text-[#22c55e] group-hover/stat:text-white stat-counter transition-colors duration-300" data-target="47">0</span></div>
+              <div class="text-xs text-gray-400 group-hover/stat:text-[#22c55e] mt-1 font-mono transition-colors duration-300">Projects</div>
+            </div>
+            <div class="group/stat relative border-l-4 border-[#22c55e] pl-4 py-3 rounded-r-lg bg-gradient-to-r from-[#22c55e]/15 to-transparent hover:from-[#22c55e]/25 transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-[#22c55e]/30 transform cursor-default">
+              <i class="fas fa-star text-[#22c55e] mb-2 inline-block group-hover/stat:animate-spin-slow group-hover/stat:text-yellow-400 transition-all duration-300"></i>
+              <div class="mt-2"><span class="stat-number text-4xl font-bold text-[#22c55e] group-hover/stat:text-white stat-counter transition-colors duration-300" data-target="100">0</span><span class="text-2xl group-hover/stat:text-white transition-colors duration-300">%</span></div>
+              <div class="text-xs text-gray-400 group-hover/stat:text-[#22c55e] mt-1 font-mono transition-colors duration-300">Satisfaction</div>
+            </div>
+            <div class="group/stat relative border-l-4 border-[#22c55e] pl-4 py-3 rounded-r-lg bg-gradient-to-r from-[#22c55e]/15 to-transparent hover:from-[#22c55e]/25 transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-[#22c55e]/30 transform cursor-default">
+              <i class="fas fa-globe text-[#22c55e] mb-2 inline-block group-hover/stat:animate-spin group-hover/stat:text-blue-400 transition-all duration-300" style="animation-duration: 4s; animation-delay: 0.2s;"></i>
+              <div class="mt-2"><span class="stat-number text-4xl font-bold text-[#22c55e] group-hover/stat:text-white stat-counter transition-colors duration-300" data-target="12">0</span></div>
+              <div class="text-xs text-gray-400 group-hover/stat:text-[#22c55e] mt-1 font-mono transition-colors duration-300">Countries</div>
+            </div>
           </div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -769,29 +952,56 @@
     <section id="services" class="my-28">
       <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> core services</h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
-          <i class="fas fa-brain text-4xl text-[#22c55e] mb-3"></i>
-          <h3 class="text-xl font-bold">AI & Machine Learning</h3>
-          <p class="text-sm my-3">Custom models, NLP, predictive analytics.</p>
-          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:90%"></div></div>
+        <!-- AI & Machine Learning -->
+        <div class="service-card liquid-glass-card p-6 rounded-3xl reveal-on-scroll group">
+          <div class="relative mb-4">
+            <div class="icon-wrapper absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" style="background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%);"></div>
+            <i class="fas fa-brain text-5xl text-[#22c55e] mb-3 inline-block animate-bounce-slow group-hover:animate-pulse" style="animation-delay: 0s; z-index: 10; position: relative;"></i>
+          </div>
+          <h3 class="text-xl font-bold group-hover:text-[#22c55e] transition-colors duration-300">AI & Machine Learning</h3>
+          <p class="text-sm my-3 text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Custom models, NLP, predictive analytics.</p>
+          <div class="w-full bg-gray-700/40 h-2 rounded-full overflow-hidden group-hover:bg-gray-700/60 transition-colors duration-300">
+            <div class="bg-gradient-to-r from-[#22c55e] to-[#16a34a] h-2 rounded-full skill-bar" style="width:90%; animation: skillFill 1.5s ease-out forwards;"></div>
+          </div>
         </div>
-        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
-          <i class="fas fa-shield-halved text-4xl text-[#22c55e] mb-3"></i>
-          <h3 class="text-xl font-bold">Cloud Security</h3>
-          <p class="text-sm my-3">Zero‑trust architecture, threat monitoring.</p>
-          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:95%"></div></div>
+        
+        <!-- Cloud Security -->
+        <div class="service-card liquid-glass-card p-6 rounded-3xl reveal-on-scroll group">
+          <div class="relative mb-4">
+            <div class="icon-wrapper absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" style="background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%);"></div>
+            <i class="fas fa-shield-halved text-5xl text-[#22c55e] mb-3 inline-block animate-bounce-slow group-hover:animate-spin-slow" style="animation-delay: 0.1s; z-index: 10; position: relative;"></i>
+          </div>
+          <h3 class="text-xl font-bold group-hover:text-[#22c55e] transition-colors duration-300">Cloud Security</h3>
+          <p class="text-sm my-3 text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Zero‑trust architecture, threat monitoring.</p>
+          <div class="w-full bg-gray-700/40 h-2 rounded-full overflow-hidden group-hover:bg-gray-700/60 transition-colors duration-300">
+            <div class="bg-gradient-to-r from-[#22c55e] to-[#16a34a] h-2 rounded-full skill-bar" style="width:95%; animation: skillFill 1.5s ease-out forwards 0.2s;"></div>
+          </div>
         </div>
-        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
-          <i class="fas fa-bug text-4xl text-[#22c55e] mb-3"></i>
-          <h3 class="text-xl font-bold">Penetration Testing</h3>
-          <p class="text-sm my-3">Ethical hacking, vulnerability assessments.</p>
-          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:88%"></div></div>
+        
+        <!-- Penetration Testing -->
+        <div class="service-card liquid-glass-card p-6 rounded-3xl reveal-on-scroll group">
+          <div class="relative mb-4">
+            <div class="icon-wrapper absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" style="background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%);"></div>
+            <i class="fas fa-bug text-5xl text-[#22c55e] mb-3 inline-block animate-bounce-slow group-hover:animate-bounce" style="animation-delay: 0.2s; z-index: 10; position: relative;"></i>
+          </div>
+          <h3 class="text-xl font-bold group-hover:text-[#22c55e] transition-colors duration-300">Penetration Testing</h3>
+          <p class="text-sm my-3 text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Ethical hacking, vulnerability assessments.</p>
+          <div class="w-full bg-gray-700/40 h-2 rounded-full overflow-hidden group-hover:bg-gray-700/60 transition-colors duration-300">
+            <div class="bg-gradient-to-r from-[#22c55e] to-[#16a34a] h-2 rounded-full skill-bar" style="width:88%; animation: skillFill 1.5s ease-out forwards 0.4s;"></div>
+          </div>
         </div>
-        <div class="service-card ios-26-glass-dark p-6 rounded-3xl reveal-on-scroll">
-          <i class="fas fa-link text-4xl text-[#22c55e] mb-3"></i>
-          <h3 class="text-xl font-bold">Blockchain Solutions</h3>
-          <p class="text-sm my-3">Smart contracts, DeFi, identity.</p>
-          <div class="w-full bg-gray-700 h-2 rounded-full"><div class="bg-[#22c55e] h-2 rounded-full" style="width:82%"></div></div>
+        
+        <!-- Blockchain Solutions -->
+        <div class="service-card liquid-glass-card p-6 rounded-3xl reveal-on-scroll group">
+          <div class="relative mb-4">
+            <div class="icon-wrapper absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" style="background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, transparent 70%);"></div>
+            <i class="fas fa-link text-5xl text-[#22c55e] mb-3 inline-block animate-bounce-slow group-hover:animate-spin-slow" style="animation-delay: 0.3s; z-index: 10; position: relative;"></i>
+          </div>
+          <h3 class="text-xl font-bold group-hover:text-[#22c55e] transition-colors duration-300">Blockchain Solutions</h3>
+          <p class="text-sm my-3 text-gray-400 group-hover:text-gray-300 transition-colors duration-300">Smart contracts, DeFi, identity.</p>
+          <div class="w-full bg-gray-700/40 h-2 rounded-full overflow-hidden group-hover:bg-gray-700/60 transition-colors duration-300">
+            <div class="bg-gradient-to-r from-[#22c55e] to-[#16a34a] h-2 rounded-full skill-bar" style="width:82%; animation: skillFill 1.5s ease-out forwards 0.6s;"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -858,51 +1068,134 @@
       </div>
     </section>
 
-    <!-- Team Section (social links clickable) -->
+    <!-- Team Section (Enhanced with profile icons and animations) -->
     <section id="team" class="my-28">
       <h2 class="text-4xl font-mono mb-10"><span class="text-[#22c55e]">//</span> core team</h2>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
-          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-[#22c55e] to-black flex items-center justify-center text-4xl font-bold border-4 border-[#22c55e]">PM</div>
-          <h3 class="text-xl mt-4">Pius Maina</h3>
-          <p class="text-[#22c55e]">CEO & Founder</p>
-          <p class="text-sm my-2">Visionary architect, ex‑SpaceX security.</p>
-          <div class="flex justify-center gap-3 mt-2">
-            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
-            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
-            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter text-[#22c55e] hover:text-white"></i></a>
+        
+        <!-- Pius Maina - Male -->
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#22c55e]/50 group">
+          <div class="relative inline-block mb-4">
+            <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-[#22c55e]/30 to-[#22c55e]/10 flex items-center justify-center border-4 border-[#22c55e] relative overflow-hidden group/avatar">
+              <!-- Animated background glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-[#22c55e] to-transparent opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-300"></div>
+              <!-- Male Icon -->
+              <i class="fas fa-user-tie text-5xl text-[#22c55e] group-hover/avatar:scale-110 transition-transform duration-300 relative z-10"></i>
+            </div>
+            <!-- Pulse animation ring -->
+            <div class="absolute inset-0 w-28 h-28 mx-auto rounded-full border-2 border-[#22c55e] opacity-0 group-hover/avatar:opacity-30 animate-pulse group-hover/avatar:animate-pulse"></div>
+          </div>
+          
+          <h3 class="text-xl font-bold mt-4 group-hover:text-[#22c55e] transition-colors duration-300">Pius Maina</h3>
+          <p class="text-[#22c55e] font-mono text-sm mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-crown text-xs"></i> CEO & Founder
+          </p>
+          <p class="text-sm text-gray-300 my-3 leading-relaxed">Visionary architect, ex‑SpaceX security.</p>
+          
+          <!-- Enhanced social links with animation -->
+          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-[#22c55e]/20">
+            <a href="https://linkedin.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#22c55e]/10 text-[#22c55e] hover:bg-[#22c55e] hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#22c55e]/10 text-[#22c55e] hover:bg-[#22c55e] hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#22c55e]/10 text-[#22c55e] hover:bg-[#22c55e] hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-twitter"></i>
+            </a>
           </div>
         </div>
-        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
-          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-black flex items-center justify-center text-4xl">JD</div>
-          <h3 class="text-xl mt-4">Hassan Mohammed</h3>
-          <p class="text-[#22c55e]">CTO, AI research</p>
-          <p class="text-sm my-2">7+ years in deep learning.</p>
-          <div class="flex justify-center gap-3 mt-2">
-            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
-            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+
+        <!-- Hassan Mohammed - Male -->
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#22c55e]/50 group">
+          <div class="relative inline-block mb-4">
+            <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-blue-500/30 to-blue-600/10 flex items-center justify-center border-4 border-blue-500 relative overflow-hidden group/avatar">
+              <!-- Animated background glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-transparent opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-300"></div>
+              <!-- Male Icon -->
+              <i class="fas fa-user text-5xl text-blue-500 group-hover/avatar:scale-110 transition-transform duration-300 relative z-10"></i>
+            </div>
+            <!-- Pulse animation ring -->
+            <div class="absolute inset-0 w-28 h-28 mx-auto rounded-full border-2 border-blue-500 opacity-0 group-hover/avatar:opacity-30 animate-pulse group-hover/avatar:animate-pulse"></div>
+          </div>
+          
+          <h3 class="text-xl font-bold mt-4 group-hover:text-blue-500 transition-colors duration-300">Hassan Mohammed</h3>
+          <p class="text-blue-500 font-mono text-sm mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-microchip text-xs"></i> CTO, AI Research
+          </p>
+          <p class="text-sm text-gray-300 my-3 leading-relaxed">7+ years in deep learning & neural networks.</p>
+          
+          <!-- Enhanced social links with animation -->
+          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-blue-500/20">
+            <a href="https://linkedin.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-github"></i>
+            </a>
           </div>
         </div>
-        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
-          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-black flex items-center justify-center text-4xl">MC</div>
-          <h3 class="text-xl mt-4">Mary Cheplagat</h3>
-          <p class="text-[#22c55e]">Lead Security</p>
-          <p class="text-sm my-2">Zero‑day hunter.</p>
-          <div class="flex justify-center gap-3 mt-2">
-            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
-            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+
+        <!-- Mary Cheplagat - Female -->
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 group">
+          <div class="relative inline-block mb-4">
+            <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-purple-500/30 to-purple-600/10 flex items-center justify-center border-4 border-purple-500 relative overflow-hidden group/avatar">
+              <!-- Animated background glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-transparent opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-300"></div>
+              <!-- Female Icon -->
+              <i class="fas fa-user-secret text-5xl text-purple-500 group-hover/avatar:scale-110 transition-transform duration-300 relative z-10"></i>
+            </div>
+            <!-- Pulse animation ring -->
+            <div class="absolute inset-0 w-28 h-28 mx-auto rounded-full border-2 border-purple-500 opacity-0 group-hover/avatar:opacity-30 animate-pulse group-hover/avatar:animate-pulse"></div>
+          </div>
+          
+          <h3 class="text-xl font-bold mt-4 group-hover:text-purple-500 transition-colors duration-300">Mary Cheplagat</h3>
+          <p class="text-purple-500 font-mono text-sm mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-shield text-xs"></i> Lead Security
+          </p>
+          <p class="text-sm text-gray-300 my-3 leading-relaxed">Zero‑day hunter & ethical security expert.</p>
+          
+          <!-- Enhanced social links with animation -->
+          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-purple-500/20">
+            <a href="https://linkedin.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-github"></i>
+            </a>
           </div>
         </div>
-        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll">
-          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-orange-500 to-black flex items-center justify-center text-4xl">AK</div>
-          <h3 class="text-xl mt-4">Felix Mwangi</h3>
-          <p class="text-[#22c55e]">Blockchain lead</p>
-          <p class="text-sm my-2">DeFi protocols architect.</p>
-          <div class="flex justify-center gap-3 mt-2">
-            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin text-[#22c55e] hover:text-white"></i></a>
-            <a href="https://github.com" target="_blank"><i class="fab fa-github text-[#22c55e] hover:text-white"></i></a>
+
+        <!-- Felix Mwangi - Male -->
+        <div class="team-card ios-26-glass-dark p-6 rounded-3xl text-center reveal-on-scroll transform transition duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/50 group">
+          <div class="relative inline-block mb-4">
+            <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-orange-500/30 to-orange-600/10 flex items-center justify-center border-4 border-orange-500 relative overflow-hidden group/avatar">
+              <!-- Animated background glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-transparent opacity-0 group-hover/avatar:opacity-20 transition-opacity duration-300"></div>
+              <!-- Male Icon -->
+              <i class="fas fa-user-ninja text-5xl text-orange-500 group-hover/avatar:scale-110 transition-transform duration-300 relative z-10"></i>
+            </div>
+            <!-- Pulse animation ring -->
+            <div class="absolute inset-0 w-28 h-28 mx-auto rounded-full border-2 border-orange-500 opacity-0 group-hover/avatar:opacity-30 animate-pulse group-hover/avatar:animate-pulse"></div>
+          </div>
+          
+          <h3 class="text-xl font-bold mt-4 group-hover:text-orange-500 transition-colors duration-300">Felix Mwangi</h3>
+          <p class="text-orange-500 font-mono text-sm mb-3 flex items-center justify-center gap-2">
+            <i class="fas fa-link text-xs"></i> Blockchain Lead
+          </p>
+          <p class="text-sm text-gray-300 my-3 leading-relaxed">DeFi protocols architect & smart contracts expert.</p>
+          
+          <!-- Enhanced social links with animation -->
+          <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-orange-500/20">
+            <a href="https://linkedin.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-black transform transition duration-300 hover:scale-110">
+              <i class="fab fa-github"></i>
+            </a>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -1064,7 +1357,7 @@
   <!-- Portfolio Floating Button -->
   <button id="portfolioToggle" title="View My Portfolio"><i class="fas fa-briefcase"></i></button>
   <!-- AI Assistant Toggle Button -->
-  <button id="aiToggle" class="fixed bottom-20 right-4 bg-[#22c55e] text-black p-4 rounded-full shadow-2xl z-[150]"><i class="fas fa-robot text-xl"></i></button>
+  <button id="aiToggle" title="AI Assistant"><i class="fas fa-robot text-xl"></i></button>
 
   <script>
     (function() {
